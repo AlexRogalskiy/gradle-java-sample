@@ -1,0 +1,17 @@
+apply plugin: 'java'
+
+repositories {
+  mavenLocal() // used to publish and test local gradle plugin changes
+  gradlePluginPortal()
+  jcenter()
+}
+
+dependencies {
+  implementation("com.github.breadmoirai:github-release:2.2.12")
+  implementation("com.github.jengelman.gradle.plugins:shadow:5.2.0")
+  implementation("com.github.ben-manes:gradle-versions-plugin:0.28.0")
+  implementation("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.8")
+  implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.4.10")
+  implementation("com.vdurmont:semver4j:3.1.0")
+  implementation("io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.22.0")
+}

@@ -1,0 +1,13 @@
+theme: jekyll-theme-cayman
+
+permalink: pretty
+
+url: https://alexander-rogalsky.gitbook.io/gradle-java-sample
+baseurl: /
+title: Gradle Java sample
+description: Explores different features of gradle by using Java
+
+author: Alexander Rogalskiy
+
+docs: https://github.com/AlexRogalskiy/gradle-java-sample/wiki
+blog: https://alexrogalskiy.github.io/

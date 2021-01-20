@@ -1,0 +1,99 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+def isReleaseBuild() {
+  return VERSION_NAME.contains("SNAPSHOT") == false
+}
+
+def isLocal() {
+  return this.hasProperty('local') ? Boolean.parseBoolean(this.getProperty('local') as String) : true;
+}
+
+def getReleaseRepositoryUrl() {
+  if (this.isLocal()) {
+    return this.hasProperty('RELEASE_REPOSITORY_LOCAL') ? RELEASE_REPOSITORY_LOCAL : "file://${System.env.HOME}/.m2/repository"
+  }
+  return this.hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
+
+def getSnapshotRepositoryUrl() {
+  if (this.isLocal()) {
+    return this.hasProperty('SNAPSHOT_REPOSITORY_LOCAL') ? SNAPSHOT_REPOSITORY_LOCAL : "file://${System.env.HOME}/.m2/repository"
+  }
+  return this.hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL : "https://oss.sonatype.org/content/repositories/snapshots/"
+}
+
+def getRepositoryUsername() {
+  return this.hasProperty('SONATYPE_USERNAME') ? SONATYPE_USERNAME : ""
+}
+
+def getRepositoryPassword() {
+  return this.hasProperty('SONATYPE_PASSWORD') ? SONATYPE_PASSWORD : ""
+}
+
+afterEvaluate { project ->
+  uploadArchives {
+    //noinspection GradleMisplacedStatement
+    repositories {
+      mavenDeployer {
+        beforeDeployment { deployment -> signing.signPom(deployment) }
+
+        pom.groupId = 'io.nullables.api.sample'
+        pom.artifactId = 'gradle-java-sample'
+        pom.version = VERSION_NAME
+
+        repository(url: getReleaseRepositoryUrl()) {
+          authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+        }
+        snapshotRepository(url: getSnapshotRepositoryUrl()) {
+          authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+        }
+
+        pom.project {
+          name "Gradle Java sample"
+          packaging 'aar'
+          description 'Gradle Java sample project'
+          url 'https://github.com/AlexRogalsky/gradle-java-sample'
+          inceptionYear '2021'
+
+          scm {
+            url 'https://github.com/AlexRogalsky/gradle-java-sample'
+            connection 'scm:git:git://github.com/AlexRogalsky/gradle-java-sample.git'
+            developerConnection 'scm:git:git@github.com:AlexRogalsky/gradle-java-sample.git'
+          }
+
+          developers {
+            developer {
+              name "Alexander Rogalskiy"
+              email 'alexander.rogalsky@yandex.ru'
+              id 'AlexRogalskiy'
+              url 'https://github.com/AlexRogalsky'
+              timezone '+3'
+              roles {
+                role 'developer'
+              }
+            }
+          }
+
+          licenses {
+            license {
+              name "Apache License version 2.0"
+              url 'https://github.com/vrallev/app-context/blob/master/LICENSE'
+              distribution 'repo'
+            }
+          }
+
+          issueManagement {
+            system 'GitHub Issues'
+            url 'https://github.com/AlexRogalskiy/gradle-java-sample/issues'
+          }
+        }
+      }
+    }
+  }
+
+  signing {
+    required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+  }
+}
