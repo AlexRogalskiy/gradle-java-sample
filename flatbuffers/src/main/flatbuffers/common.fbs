@@ -1,0 +1,2 @@
+include "message.fbs";
+include "monster.fbs";

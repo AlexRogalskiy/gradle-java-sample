@@ -1,0 +1,13 @@
+namespace io.nullables.api.sample.flatbuffers.model;
+
+file_identifier "MES1";
+
+table PointPosition { x:uint; y:uint; }
+
+table MarkerPosition {}
+
+union Position {
+  Start:MarkerPosition,
+  Point:PointPosition,
+  Finish:MarkerPosition
+}
