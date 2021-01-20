@@ -18,3 +18,5 @@ rootProject.name = 'gradle-java-sample'
 
 include 'appflow'
 include 'testflow'
+include 'protobuf'
+include 'flatbuffers'
