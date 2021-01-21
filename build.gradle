@@ -41,7 +41,7 @@ allprojects {
 subprojects {
   group 'io.nullables.api.sample'
   version '1.0.0-SNAPSHOT'
-  description = 'Gradle java sample project'
+  description = "Gradle java sample project"
 
   project.buildDir = "${rootProject.buildDir}/${project.name}"
 
@@ -125,8 +125,13 @@ subprojects {
 //  }
 
   tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-    options.deprecation = true
+    configure(options) {
+      options.encoding = 'UTF-8'
+      options.deprecation = true
+      options.compilerArgs += ['--release', '8']
+      options.compilerArgs += '-Xlint:deprecation'
+      options.compilerArgs += '-Xlint:unchecked'
+    }
   }
 
   java {
