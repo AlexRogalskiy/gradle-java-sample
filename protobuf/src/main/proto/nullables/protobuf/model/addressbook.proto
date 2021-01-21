@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package tutorial;
+package nullables.protobuf.model;
 
 option java_package = "io.nullables.api.sample.protobuf";
 option java_outer_classname = "AddressBookProto";

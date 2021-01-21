@@ -1,0 +1,34 @@
+syntax = "proto2";
+
+option java_package = "io.nullables.api.sample.protobuf";
+option java_multiple_files = true;
+option optimize_for = CODE_SIZE;
+
+import "nullables/protobuf/validator/envoyproxy.proto";
+import "nullables/protobuf/validator/nullables.proto";
+
+message RequestType {}
+message ResponseType {}
+
+package nullables.protobuf.model;
+
+message SearchRequest {
+  required string query = 1 [(envoyproxy.protobuf.validator.rules).string = {
+    pattern:   "([A-Za-z]+) ([A-Za-z]+)*$",
+    max_bytes: 50,
+  }];
+  required string email_id = 2 [(envoyproxy.protobuf.validator.rules).string.email = true];
+  required int32 page_number = 3;  // Which page number do we want?
+  required int32 result_per_page = 4;  // Number of results to return per page.
+}
+
+service MyService {
+  option (nullables.protobuf.validator.service_opt) = FOO;
+
+  rpc MyMethod(RequestType) returns(ResponseType) {
+    // Note:  my_method_option has type MyMessage.  We can set each field
+    //   within it using a separate "option" line.
+    option (nullables.protobuf.validator.method_opt).foo = 567;
+    option (nullables.protobuf.validator.method_opt).bar = "Some string";
+  }
+}

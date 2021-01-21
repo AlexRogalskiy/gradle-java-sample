@@ -8,10 +8,15 @@ ext {
   netty_version = '5.0.0.Alpha2'
   protobuf_version = '4.0.0-rc-2'
   javax_version = '1.3.2'
+
+  protoc_gen_version = '0.4.1'
 }
 
 dependencies {
   implementation("com.google.protobuf:protobuf-gradle-plugin:${protobuf_gradle_version}")
+
+  implementation("io.envoyproxy.protoc-gen-validate:pgv-java:0.4.1")
+  implementation("io.envoyproxy.protoc-gen-validate:pgv-java-stub:0.4.1")
 
   implementation("io.netty:netty-all:${netty_version}")
   implementation("com.google.protobuf:protobuf-java:${protobuf_version}")
@@ -29,10 +34,35 @@ protobuf {
     artifact = "com.google.protobuf:protoc:${protobuf_version}"
   }
 
+  plugins {
+    javapgv {
+      artifact = "io.envoyproxy.protoc-gen-validate:protoc-gen-validate:${protoc_gen_version}"
+    }
+  }
+
   generateProtoTasks {
+    all()*.plugins {
+      javapgv {
+        option "lang=java"
+      }
+    }
     // (Java-only) returns tasks for a sourceSet
     ofSourceSet('main')
   }
+}
+
+sourceSets {
+  main {
+    proto {
+      // In addition to the default "src/main/proto"
+      srcDir "proto"
+      srcDir "src/main/schema"
+    }
+  }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  from sourceSets.main.allSource
 }
 
 compileJava {

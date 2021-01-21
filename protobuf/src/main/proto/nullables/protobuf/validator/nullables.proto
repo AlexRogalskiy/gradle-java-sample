@@ -1,0 +1,57 @@
+syntax = "proto2";
+
+package nullables.protobuf.validator;
+
+option java_package = "io.nullables.api.sample.protobuf";
+option java_multiple_files = true;
+option optimize_for = CODE_SIZE;
+
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.FieldOptions {
+  optional string validator = 51234;
+}
+extend google.protobuf.FileOptions {
+  optional string file_opt = 50000;
+}
+extend google.protobuf.MessageOptions {
+  optional int32 message_opt = 50001;
+}
+extend google.protobuf.FieldOptions {
+  optional float field_opt = 50002;
+}
+extend google.protobuf.OneofOptions {
+  optional int64 oneof_opt = 50003;
+}
+extend google.protobuf.EnumOptions {
+  optional bool enum_opt = 50004;
+}
+extend google.protobuf.EnumValueOptions {
+  optional uint32 enum_value_opt = 50005;
+}
+extend google.protobuf.ServiceOptions {
+  optional EnumValue service_opt = 50006;
+}
+extend google.protobuf.MethodOptions {
+  optional MessageValue method_opt = 50007;
+}
+
+option (file_opt) = "Hello world!";
+
+message MessageValue {
+  option (message_opt) = 1234;
+
+  optional int32 foo = 1 [(field_opt) = 4.5];
+  optional string bar = 2;
+  oneof qux {
+    option (oneof_opt) = 42;
+    string quux = 3;
+  }
+}
+
+enum EnumValue {
+  option (enum_opt) = true;
+
+  FOO = 1 [(enum_value_opt) = 321];
+  BAR = 2;
+}
