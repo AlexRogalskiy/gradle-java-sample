@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option java_package = "io.nullables.api.sample.protobuf";
+option java_multiple_files = true;
+option optimize_for = CODE_SIZE;
+
+import "empty.proto";
+
+message Request {
+  string stringValue = 1;
+  int32 intValue = 2;
+  int64 longValue = 3;
+  bool booleanValue = 4;
+  float floatValue = 5;
+  double doubleValue = 6;
+}
+
+message Response {
+  string stringValue = 1;
+  int32 intValue = 2;
+  int64 LongValue = 3;
+  bool booleanValue = 4;
+  float floatValue = 5;
+  double doubleValue = 6;
+}
+
+message RequestWithMap {
+  string stringValue = 1;
+  int32 intValue = 2;
+  map<string, string> map = 3;
+}
+
+message ResponseWithMap {
+  string stringValue = 1;
+  int32 intValue = 2;
+  map<string, string> map = 3;
+}
