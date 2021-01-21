@@ -2,7 +2,6 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
-  id("org.jetbrains.dokka") apply false
   id("com.github.johnrengelman.shadow") apply false
   id("com.github.ben-manes.versions")
 
@@ -39,17 +38,50 @@ allprojects {
 }
 
 subprojects {
-  group 'io.nullables.api.sample'
-  version '1.0.0-SNAPSHOT'
-  description = "Gradle java sample project"
 
-  project.buildDir = "${rootProject.buildDir}/${project.name}"
+  ext.projectConfig = [
+    "group"      : 'io.nullables.api.sample',
+    "version"    : '1.0.0-SNAPSHOT',
+    "description": "Gradle java sample project"
+  ]
+  ext.buildConfig = [
+    "sourceCompatibility": JavaVersion.VERSION_1_8,
+    "targetCompatibility": JavaVersion.VERSION_1_8,
+    "projectBuildDir"    : "${rootProject.buildDir}/${project.name}"
+  ]
+  ext.versions = [
+    "guava"          : "30.1-jre",
+    "commons_lang"   : "3.11",
+    "lombok"         : "1.18.16",
+    "assertj"        : "3.18.1",
+    "hamcrest"       : "2.2",
+    "junit5"         : "5.7.0",
+    "junit5_platform": "1.7.0",
+  ]
+  ext.deps = [
+    "guava"          : "com.google.guava:guava:${versions.guava}",
+    "commons_lang"   : "org.apache.commons:commons-lang3:${versions.commons_lang}",
+    "lombok"         : "org.projectlombok:lombok:${versions.lombok}",
+    "assertj"        : "org.assertj:assertj-core:${versions.assertj}",
+    "hamcrest"       : "org.hamcrest:hamcrest:${versions.hamcrest}",
+    "junit5_api"     : "org.junit.jupiter:junit-jupiter-api:${versions.junit5}",
+    "junit5_engine"  : "org.junit.jupiter:junit-jupiter-engine:${versions.junit5}",
+    "junit5_params"  : "org.junit.jupiter:junit-jupiter-params:${versions.junit5}",
+    "junit5_runner"  : "org.junit.platform:junit-platform-runner:${versions.junit5_platform}",
+    "junit5_launcher": "org.junit.platform:junit-platform-launcher:${versions.junit5_platform}",
+  ]
+
+  group projectConfig.group
+  version projectConfig.version
+  description = projectConfig.description
 
   apply plugin: 'java'
   apply plugin: 'groovy'
 
-  sourceCompatibility = JavaVersion.VERSION_1_8
-  targetCompatibility = JavaVersion.VERSION_1_8
+  sourceCompatibility = buildConfig.sourceCompatibility
+  targetCompatibility = buildConfig.targetCompatibility
+
+  project.buildDir = buildConfig.projectBuildDir
 
   repositories {
     mavenCentral()
@@ -57,43 +89,37 @@ subprojects {
     google()
   }
 
-  ext {
-    guava_version = '30.1-jre'
-    lombok_version = '1.18.16'
-    commons_lang_version = '3.11'
-    assertj_version = '3.18.1'
-    hamcrest_version = '2.2'
-    junit_version = '5.7.0'
-    junit_platform_version = '1.7.0'
+  java {
+    modularity.inferModulePath.set(true)
   }
 
   dependencies {
     // guava library dependencies
-    implementation("com.google.guava:guava:$guava_version")
+    implementation deps.guava
 
     // commons lang library dependencies
-    implementation("org.apache.commons:commons-lang3:$commons_lang_version")
+    implementation deps.commons_lang
 
     // lombok library dependencies
-    implementation("org.projectlombok:lombok:${lombok_version}")
-    annotationProcessor("org.projectlombok:lombok:${lombok_version}")
+    implementation deps.lombok
+    annotationProcessor deps.lombok
 
     // lombok test library dependencies
-    testImplementation("org.projectlombok:lombok:${lombok_version}")
-    testAnnotationProcessor("org.projectlombok:lombok:${lombok_version}")
+    testImplementation deps.lombok
+    testAnnotationProcessor deps.lombok
 
     // assertj library dependencies
-    testImplementation("org.assertj:assertj-core:${assertj_version}")
+    testImplementation deps.assertj
 
     // hamcrest library dependencies
-    testImplementation("org.hamcrest:hamcrest:${hamcrest_version}")
+    testImplementation deps.hamcrest
 
     // junit test library dependencies
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junit_version")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:$junit_version")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:$junit_version")
-    testImplementation("org.junit.platform:junit-platform-runner:$junit_platform_version")
-    testImplementation("org.junit.platform:junit-platform-launcher:$junit_platform_version") {
+    testImplementation deps.junit5_api
+    testImplementation deps.junit5_engine
+    testImplementation deps.junit5_params
+    testImplementation deps.junit5_runner
+    testImplementation(deps.junit5_launcher) {
       exclude group: 'junit', module: 'junit'
     }
   }
@@ -108,10 +134,29 @@ subprojects {
     }
   }
 
+  sourceSets {
+    main.java.srcDirs += "src/main/java"
+    test.java.srcDirs += "src/test/java"
+  }
+
   processResources {
     doFirst {
       from 'src/main/resources'
       filter(ReplaceTokens, tokens: [project_version: project.version, project_name: project.name])
+    }
+  }
+
+  dependencyUpdates.resolutionStrategy {
+    componentSelection { rules ->
+      rules.all { ComponentSelection selection ->
+        boolean rejected = ["alpha", "beta", "rc", "cr", "m", "preview", "b", "ea", "snapshot"].any {
+          qualifier ->
+            selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-+]*/
+        }
+        if (rejected) {
+          selection.reject("Release candidate")
+        }
+      }
     }
   }
 
@@ -124,6 +169,14 @@ subprojects {
 //    }
 //  }
 
+  configurations.all { config ->
+    config.resolutionStrategy.dependencySubstitution {
+      if (config.name.toLowerCase().contains('test')) {
+        substitute module('org.slf4j:slf4j-simple:1.6.1') with module('org.slf4j:slf4j-nop:1.6.1')
+      }
+    }
+  }
+
   tasks.withType(JavaCompile) {
     configure(options) {
       options.encoding = 'UTF-8'
@@ -132,10 +185,6 @@ subprojects {
       options.compilerArgs += '-Xlint:deprecation'
       options.compilerArgs += '-Xlint:unchecked'
     }
-  }
-
-  java {
-    modularity.inferModulePath.set(true)
   }
 }
 

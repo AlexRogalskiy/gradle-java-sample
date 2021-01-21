@@ -52,13 +52,9 @@ protobuf {
 }
 
 sourceSets {
-  main {
-    proto {
-      // In addition to the default "src/main/proto"
-      srcDir "proto"
-      srcDir "src/main/schema"
-    }
-  }
+  main.proto.srcDirs += 'proto'
+  main.proto.srcDirs += 'src/main/schema'
+  test.proto.srcDirs += 'src/test/schema'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

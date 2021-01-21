@@ -25,4 +25,5 @@ compileThrift {
 
 sourceSets {
   main.java.srcDirs += 'src/main/thrift'
+  test.java.srcDirs += 'src/test/thrift'
 }
