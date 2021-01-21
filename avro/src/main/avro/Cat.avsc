@@ -1,0 +1,25 @@
+{
+    "name": "Cat",
+    "namespace": "io.nullables.api.sample.avro",
+    "type": "record",
+    "fields": [
+        {
+            "name": "breed",
+            "type": {
+                "name": "Breed",
+                "type": "enum",
+                "symbols": [
+                    "ABYSSINIAN",
+                    "AMERICAN_SHORTHAIR",
+                    "BIRMAN",
+                    "MAINE_COON",
+                    "ORIENTAL",
+                    "PERSIAN",
+                    "RAGDOLL",
+                    "SIAMESE",
+                    "SPHYNX"
+                ]
+            }
+        }
+    ]
+}

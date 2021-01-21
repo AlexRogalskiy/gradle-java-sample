@@ -1,0 +1,46 @@
+{
+  "protocol" : "ExampleInterface",
+  "namespace" : "io.nullables.api.sample.avro",
+  "types" : [ {
+    "type" : "enum",
+    "name" : "ExampleEnum",
+    "symbols" : [ "FOO", "BAR", "BAZ" ]
+  }, {
+    "type" : "record",
+    "name" : "ExampleNesting",
+    "fields" : [ {
+      "name" : "counts",
+      "type" : {
+        "type" : "array",
+        "items" : "int"
+      }
+    }, {
+      "name" : "attributes",
+      "type" : [ "null", {
+        "type" : "map",
+        "values" : "string"
+      } ],
+      "default" : null
+    } ]
+  }, {
+    "type" : "record",
+    "name" : "Example",
+    "fields" : [ {
+      "name" : "id",
+      "type" : "long"
+    }, {
+      "name" : "my_enum",
+      "type" : [ "null", "ExampleEnum" ],
+      "default" : null
+    }, {
+      "name" : "my_nested_member",
+      "type" : [ "null", "ExampleNesting" ],
+      "default" : null
+    }, {
+      "name" : "guid",
+      "type" : [ "null", "string" ],
+      "default" : null
+    } ]
+  } ],
+  "messages" : { }
+}

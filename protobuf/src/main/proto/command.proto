@@ -1,0 +1,40 @@
+syntax = "proto2";
+
+option java_package = "io.nullables.api.sample.protobuf";
+option java_multiple_files = true;
+option optimize_for = CODE_SIZE;
+
+message Sensor {
+  required string name = 1;
+  required double temperature = 2;
+  repeated int32 humidity = 3 [packed = true];
+  optional int32 result_per_page = 4 [default = 10];
+
+  enum SwitchLevel {
+    CLOSED = 0;
+    OPEN = 1;
+  }
+
+  enum EnumAllowingAlias {
+    option allow_alias = true;
+    UNKNOWN = 0;
+    STARTED = 1;
+    RUNNING = 1;
+  }
+
+  required SwitchLevel door = 5 [default = CLOSED];
+}
+
+message SearchResponse {
+  repeated Result result = 1;
+}
+
+message Result {
+  required string url = 1;
+  optional string title = 2;
+  repeated string snippets = 3;
+}
+
+message Foo2 {
+  extensions 1000 to max;
+}

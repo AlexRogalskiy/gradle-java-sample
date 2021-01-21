@@ -28,6 +28,7 @@ table Monster {
 table Weapon {
   name:string;
   damage:int16;
+  kind: ubyte;
 }
 
 table Pickup {

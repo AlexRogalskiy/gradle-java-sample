@@ -1,3 +1,8 @@
+ext {
+  spock_version = '1.2-groovy-2.5'
+}
+
 dependencies {
-  testImplementation 'junit:junit:4.13-beta-3'
+  testCompile("org.spockframework:spock-core:$spock_version")
+  testCompile("org.spockframework:spock-spring:$spock_version")
 }

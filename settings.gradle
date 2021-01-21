@@ -1,11 +1,24 @@
 pluginManagement {
   repositories {
     mavenCentral()
+    mavenLocal()
+    google()
+    jcenter()
+
+    gradlePluginPortal()
+
     maven {
+      name "JCenter Gradle Plugins repository"
+      url "https://dl.bintray.com/gradle/gradle-plugins"
+    }
+    maven {
+      name "Sonatype Snapshots repository"
+      url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+    maven {
+      name "Gradle repository"
       url "https://plugins.gradle.org/m2/"
     }
-    gradlePluginPortal()
-    jcenter()
   }
 }
 
@@ -20,3 +33,4 @@ include 'appflow'
 include 'testflow'
 include 'protobuf'
 include 'flatbuffers'
+include 'avro'

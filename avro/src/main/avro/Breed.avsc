@@ -1,0 +1,16 @@
+{
+    "name": "Breed",
+    "namespace": "io.nullables.api.sample.avro",
+    "type": "enum",
+    "symbols": [
+        "ABYSSINIAN",
+        "AMERICAN_SHORTHAIR",
+        "BIRMAN",
+        "MAINE_COON",
+        "ORIENTAL",
+        "PERSIAN",
+        "RAGDOLL",
+        "SIAMESE",
+        "SPHYNX"
+    ]
+}

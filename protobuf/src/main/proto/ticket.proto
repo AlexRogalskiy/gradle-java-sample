@@ -1,8 +1,10 @@
 syntax = "proto3";
 
-package sample;
+option java_package = "io.nullables.api.sample.protobuf";
+option java_multiple_files = true;
+option optimize_for = CODE_SIZE;
 
-message Test {
+message Dashboard {
   string query = 1;
   int32 page_number = 2;
   int32 result_per_page = 3;

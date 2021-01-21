@@ -1,20 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-
-buildscript {
-  repositories {
-    mavenCentral()
-    mavenLocal()
-    google()
-    jcenter()
-
-    maven {
-      url "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
-  }
-}
 
 plugins {
   id("org.jetbrains.dokka") apply false
@@ -27,6 +12,26 @@ plugins {
   id("maven")
 }
 
+repositories {
+  mavenCentral()
+  mavenLocal()
+  google()
+  jcenter()
+
+  maven {
+    name "JCenter Gradle Plugins repository"
+    url "https://dl.bintray.com/gradle/gradle-plugins"
+  }
+  maven {
+    name "Sonatype Snapshots repository"
+    url "https://oss.sonatype.org/content/repositories/snapshots/"
+  }
+  maven {
+    name "Gradle repository"
+    url "https://plugins.gradle.org/m2/"
+  }
+}
+
 allprojects {
   apply plugin: 'com.github.johnrengelman.shadow'
   apply plugin: 'java'
@@ -36,6 +41,7 @@ allprojects {
 subprojects {
   group 'io.nullables.api.sample'
   version '1.0.0-SNAPSHOT'
+  description = 'Gradle java sample project'
 
   project.buildDir = "${rootProject.buildDir}/${project.name}"
 
@@ -48,17 +54,48 @@ subprojects {
   repositories {
     mavenCentral()
     jcenter()
+    google()
+  }
+
+  ext {
+    guava_version = '30.1-jre'
+    lombok_version = '1.18.16'
+    commons_lang_version = '3.11'
+    assertj_version = '3.18.1'
+    hamcrest_version = '2.2'
+    junit_version = '5.7.0'
+    junit_platform_version = '1.7.0'
   }
 
   dependencies {
-    implementation group: 'com.google.guava', name: 'guava', version: '30.1-jre'
+    // guava library dependencies
+    implementation("com.google.guava:guava:$guava_version")
 
-    testCompile group: 'org.spockframework', name: 'spock-core', version: '1.2-groovy-2.5'
-    testCompile group: 'org.spockframework', name: 'spock-spring', version: '1.2-groovy-2.5'
+    // commons lang library dependencies
+    implementation("org.apache.commons:commons-lang3:$commons_lang_version")
 
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.7.0'
+    // lombok library dependencies
+    implementation("org.projectlombok:lombok:${lombok_version}")
+    annotationProcessor("org.projectlombok:lombok:${lombok_version}")
+
+    // lombok test library dependencies
+    testImplementation("org.projectlombok:lombok:${lombok_version}")
+    testAnnotationProcessor("org.projectlombok:lombok:${lombok_version}")
+
+    // assertj library dependencies
+    testImplementation("org.assertj:assertj-core:${assertj_version}")
+
+    // hamcrest library dependencies
+    testImplementation("org.hamcrest:hamcrest:${hamcrest_version}")
+
+    // junit test library dependencies
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junit_version")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:$junit_version")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junit_version")
+    testImplementation("org.junit.platform:junit-platform-runner:$junit_platform_version")
+    testImplementation("org.junit.platform:junit-platform-launcher:$junit_platform_version") {
+      exclude group: 'junit', module: 'junit'
+    }
   }
 
   test {
@@ -69,6 +106,31 @@ subprojects {
       showStandardStreams = true
       exceptionFormat = TestExceptionFormat.FULL
     }
+  }
+
+  processResources {
+    doFirst {
+      from 'src/main/resources'
+      filter(ReplaceTokens, tokens: [project_version: project.version, project_name: project.name])
+    }
+  }
+
+//  compileJava {
+//    doFirst {
+//      options.compilerArgs = [
+//        '--module-path', classpath.asPath,
+//      ]
+//      classpath = files()
+//    }
+//  }
+
+  tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.deprecation = true
+  }
+
+  java {
+    modularity.inferModulePath.set(true)
   }
 }
 

@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+option java_package = "io.nullables.api.sample.protobuf";
+option java_multiple_files = true;
+option optimize_for = CODE_SIZE;
+
+message EmailAddress {
+  //option (is).java_type = "QueryMixin";
+  required string value = 1;//[(pattern).regex = ".+@.+\\..+"];
+}
+
+message CustomerId {
+  oneof kind {
+    uint64 code = 1;
+    EmailAddress email = 2;
+    string phone = 3;
+  }
+}
