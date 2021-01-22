@@ -6,12 +6,31 @@ repositories {
   jcenter()
 }
 
+ext.versions = [
+  "github_release"  : "2.2.12",
+  "gradle_shadow"   : "5.2.0",
+  "gradle_versions" : "0.28.0",
+  "gradle_sonarqube": "2.8",
+  "gradle_dokka"    : "1.4.10",
+  "semver4j"        : "3.1.0",
+  "gradle_nexus"    : "0.22.0"
+]
+ext.deps = [
+  "github_release"  : "com.github.breadmoirai:github-release:${versions.github_release}",
+  "gradle_shadow"   : "com.github.jengelman.gradle.plugins:shadow:${versions.gradle_shadow}",
+  "gradle_versions" : "com.github.ben-manes:gradle-versions-plugin:${versions.gradle_versions}",
+  "gradle_sonarqube": "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${versions.gradle_sonarqube}",
+  "gradle_dokka"    : "org.jetbrains.dokka:dokka-gradle-plugin:${versions.gradle_dokka}",
+  "semver4j"        : "com.vdurmont:semver4j:${versions.semver4j}",
+  "gradle_nexus"    : "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:${versions.gradle_nexus}"
+]
+
 dependencies {
-  implementation("com.github.breadmoirai:github-release:2.2.12")
-  implementation("com.github.jengelman.gradle.plugins:shadow:5.2.0")
-  implementation("com.github.ben-manes:gradle-versions-plugin:0.28.0")
-  implementation("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.8")
-  implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.4.10")
-  implementation("com.vdurmont:semver4j:3.1.0")
-  implementation("io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.22.0")
+  implementation deps.github_release
+  implementation deps.gradle_shadow
+  implementation deps.gradle_versions
+  implementation deps.gradle_sonarqube
+  implementation deps.gradle_dokka
+  implementation deps.semver4j
+  implementation deps.gradle_nexus
 }

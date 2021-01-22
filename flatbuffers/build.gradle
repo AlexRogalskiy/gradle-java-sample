@@ -4,17 +4,20 @@ plugins {
   id "io.netifi.flatbuffers" version "1.0.7"
 }
 
-ext {
-  flatbuffers_version = '1.12.0'
-}
+ext.versions = [
+  "flatbuffers": "1.12.0"
+]
+ext.deps = [
+  "flatbuffers": "com.google.flatbuffers:flatbuffers-java:${versions.flatbuffers}"
+]
 
 dependencies {
-  implementation("com.google.flatbuffers:flatbuffers-java:${flatbuffers_version}")
+  implementation deps.flatbuffers
 }
 
 flatbuffers {
   flatcPath = 'C:\\portable\\flatbuffers\\flatc'
-  flatBuffersVersion = '1.8'
+  flatBuffersVersion = JavaVersion.VERSION_1_8.toString()
   language = 'java'
 }
 

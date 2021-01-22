@@ -5,12 +5,15 @@ plugins {
   id "com.commercehub.gradle.plugin.avro-base" version "0.9.1"
 }
 
-ext {
-  avro_version = '1.10.1'
-}
+ext.versions = [
+  "avro": "1.10.1"
+]
+ext.deps = [
+  "avro": "org.apache.avro:avro:${versions.avro}"
+]
 
 dependencies {
-  implementation("org.apache.avro:avro:${avro_version}")
+  implementation deps.avro
 }
 
 def generateProtocol = tasks.register("generateProtocol", GenerateAvroProtocolTask) {
