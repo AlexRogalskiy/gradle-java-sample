@@ -1,0 +1,28 @@
+ext.showBanner = {
+  println ""
+  println ""
+  println "::::    ::: :::    ::: :::        :::            :::     :::::::::   ::::::::"
+  println ":+:+:   :+: :+:    :+: :+:        :+:          :+: :+:   :+:    :+: :+:    :+:"
+  println ":+:+:+  +:+ +:+    +:+ +:+        +:+         +:+   +:+  +:+    +:+ +:+"
+  println "+#+ +:+ +#+ +#+    +:+ +#+        +#+        +#++:++#++: +#++:++#+  +#++:++#++"
+  println "+#+  +#+#+# +#+    +#+ +#+        +#+        +#+     +#+ +#+    +#+        +#+"
+  println "#+#   #+#+# #+#    #+# #+#        #+#        #+#     #+# #+#    #+# #+#    #+#"
+  println "###    ####  ########  ########## ########## ###     ### #########   ########"
+  println ""
+  println ""
+  println "     Project: $rootProject.name"
+  println ""
+  println "     $project.name $project.gradle.startParameter.taskNames"
+  println ""
+}
+
+ext.setupArrowModule = {
+  def customProperties = new Properties()
+  def customPropertiesURL = new URL("https://github.com/AlexRogalskiy/gradle-java-sample/blob/master/gradle.properties")
+  def customPropertiesStream = customPropertiesURL.openStream()
+  customProperties.load(customPropertiesStream)
+  customProperties.each { key, value -> ext.set(key, value) }
+}
+
+setupArrowModule()
+showBanner()

@@ -1,0 +1,123 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
+//compileJava {
+//  doFirst {
+//    options.compilerArgs = [
+//      '--module-path', classpath.asPath,
+//    ]
+//    classpath = files()
+//  }
+//}
+
+//compileKotlin {
+//  kotlinOptions {
+//    freeCompilerArgs += ["-Xskip-runtime-version-check"]
+//    jvmTarget = "1.8"
+//  }
+//  sourceCompatibility = JavaVersion.VERSION_1_8
+//  targetCompatibility = JavaVersion.VERSION_1_8
+//}
+
+//compileTestKotlin {
+//  kotlinOptions {
+//    jvmTarget = "1.8"
+//  }
+//  sourceCompatibility = JavaVersion.VERSION_1_8
+//  targetCompatibility = JavaVersion.VERSION_1_8
+//}
+
+//ktlint {
+//  version = KTLINT_VERSION
+//}
+
+configurations.all { config ->
+  config.resolutionStrategy {
+    cacheChangingModulesFor 0, 'seconds'
+    dependencySubstitution {
+      if (config.name.toLowerCase().contains('test')) {
+        substitute module('org.slf4j:slf4j-simple:1.6.1') with module('org.slf4j:slf4j-nop:1.6.1')
+      }
+    }
+  }
+}
+
+tasks.withType(Test) {
+  maxParallelForks = Runtime.runtime.availableProcessors()
+}
+
+tasks.withType(JavaCompile) {
+  configure(options) {
+    options.encoding = 'UTF-8'
+    options.deprecation = true
+    options.compilerArgs += ['--release', '8']
+    options.compilerArgs += '-Xlint:deprecation'
+    options.compilerArgs += '-Xlint:unchecked'
+  }
+}
+
+clean.doFirst {
+  delete "${projectDir}/docs/apidocs"
+}
+
+sourceSets {
+  main.java.srcDirs += "src/main/java"
+  test.java.srcDirs += "src/test/java"
+}
+
+processResources {
+  doFirst {
+    from 'src/main/resources'
+    filter(ReplaceTokens, tokens: [project_version: project.version, project_name: project.name])
+  }
+}
+
+java {
+  modularity.inferModulePath.set(true)
+}
+
+test {
+  useJUnitPlatform()
+
+  testLogging {
+    showExceptions = true
+    showStandardStreams = true
+    exceptionFormat = TestExceptionFormat.FULL
+    events "skipped", "failed", "standardOut", "standardError"
+  }
+}
+
+ext.projectConfig = [
+  "group"      : 'io.nullables.api.sample',
+  "version"    : '1.0.0-SNAPSHOT',
+  "description": "Gradle java sample project"
+]
+ext.buildConfig = [
+  "sourceCompatibility": JavaVersion.VERSION_1_8,
+  "targetCompatibility": JavaVersion.VERSION_1_8,
+  "projectBuildDir"    : "${rootProject.buildDir}/${project.name}"
+]
+ext.versions = [
+  "guava"          : "30.1-jre",
+  "commons_lang"   : "3.11",
+  "lombok"         : "1.18.16",
+  "assertj"        : "3.18.1",
+  "hamcrest"       : "2.2",
+  "junit5"         : "5.7.0",
+  "junit5_platform": "1.7.0",
+]
+ext.deps = [
+  "guava"          : "com.google.guava:guava:${versions.guava}",
+  "commons_lang"   : "org.apache.commons:commons-lang3:${versions.commons_lang}",
+  "lombok"         : "org.projectlombok:lombok:${versions.lombok}",
+  "assertj"        : "org.assertj:assertj-core:${versions.assertj}",
+  "hamcrest"       : "org.hamcrest:hamcrest:${versions.hamcrest}",
+  "junit5_api"     : "org.junit.jupiter:junit-jupiter-api:${versions.junit5}",
+  "junit5_engine"  : "org.junit.jupiter:junit-jupiter-engine:${versions.junit5}",
+  "junit5_params"  : "org.junit.jupiter:junit-jupiter-params:${versions.junit5}",
+  "junit5_runner"  : "org.junit.platform:junit-platform-runner:${versions.junit5_platform}",
+  "junit5_launcher": "org.junit.platform:junit-platform-launcher:${versions.junit5_platform}",
+]
+ext {
+  excludeJunit = { exclude group: 'junit', module: 'junit' }
+}

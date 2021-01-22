@@ -50,7 +50,7 @@ afterEvaluate { project ->
         }
 
         pom.project {
-          name "Gradle Java sample"
+          name = "Gradle Java sample"
           packaging 'aar'
           description 'Gradle Java sample project'
           url 'https://github.com/AlexRogalsky/gradle-java-sample'
@@ -64,7 +64,7 @@ afterEvaluate { project ->
 
           developers {
             developer {
-              name "Alexander Rogalskiy"
+              name = "Alexander Rogalskiy"
               email 'alexander.rogalsky@yandex.ru'
               id 'AlexRogalskiy'
               url 'https://github.com/AlexRogalsky'
@@ -77,7 +77,7 @@ afterEvaluate { project ->
 
           licenses {
             license {
-              name "Apache License version 2.0"
+              name = "Apache License version 2.0"
               url 'https://github.com/vrallev/app-context/blob/master/LICENSE'
               distribution 'repo'
             }
