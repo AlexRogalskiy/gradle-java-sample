@@ -1,8 +1,8 @@
 plugins {
-  id("com.github.johnrengelman.shadow") apply false
   id("com.github.ben-manes.versions")
-  id("com.diffplug.spotless") version "5.9.0"
+  id("com.github.johnrengelman.shadow") apply false
   id("com.adarshr.test-logger") version "2.1.1"
+  id("com.diffplug.spotless") version "5.9.0"
 
   id("org.sonarqube")
   id("java")
@@ -31,8 +31,20 @@ repositories {
 
 allprojects {
   apply plugin: 'com.github.johnrengelman.shadow'
+  apply plugin: 'com.adarshr.test-logger'
+  apply plugin: 'com.diffplug.spotless'
   apply plugin: 'java'
-  apply plugin: 'idea'
+
+  testlogger {
+    theme 'mocha'
+    slowThreshold 5000
+  }
+
+  spotless {
+//    java {
+//      googleJavaFormat()
+//    }
+  }
 
   repositories {
     jcenter()
@@ -124,17 +136,6 @@ jar {
   manifest {
     attributes("Class-Path": configurations.compile.collect { it.getPath() }.join(' '))
   }
-}
-
-spotless {
-  java {
-    googleJavaFormat()
-  }
-}
-
-testlogger {
-  theme 'mocha'
-  slowThreshold 5000
 }
 
 task stage(dependsOn: ['clean'])
