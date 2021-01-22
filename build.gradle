@@ -1,6 +1,8 @@
 plugins {
   id("com.github.johnrengelman.shadow") apply false
   id("com.github.ben-manes.versions")
+  id("com.diffplug.spotless") version "5.9.0"
+  id("com.adarshr.test-logger") version "2.1.1"
 
   id("org.sonarqube")
   id("java")
@@ -122,6 +124,17 @@ jar {
   manifest {
     attributes("Class-Path": configurations.compile.collect { it.getPath() }.join(' '))
   }
+}
+
+spotless {
+  java {
+    googleJavaFormat()
+  }
+}
+
+testlogger {
+  theme 'mocha'
+  slowThreshold 5000
 }
 
 task stage(dependsOn: ['clean'])

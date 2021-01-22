@@ -85,6 +85,20 @@ test {
     exceptionFormat = TestExceptionFormat.FULL
     events "skipped", "failed", "standardOut", "standardError"
   }
+
+  testlogger {
+    theme 'standard-parallel'
+    showExceptions true
+    showStackTraces true
+    showCauses true
+    showFullStackTraces true
+    showSummary true
+    showSimpleNames true
+    showStandardStreams true
+    showPassedStandardStreams false
+    showSkippedStandardStreams false
+    showFailedStandardStreams true
+  }
 }
 
 ext.projectConfig = [
