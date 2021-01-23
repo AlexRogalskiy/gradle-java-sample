@@ -1,4 +1,14 @@
-ext.showBanner = {
+static def currentDateTime(final String format) {
+  def date = new Date()
+  return date.format(format)
+}
+
+def init() {
+  setupBanner()
+  setupProperties()
+}
+
+ext.setupBanner = {
   println ""
   println ""
   println "::::    ::: :::    ::: :::        :::            :::     :::::::::   ::::::::"
@@ -12,11 +22,11 @@ ext.showBanner = {
   println ""
   println "     Project: $rootProject.name"
   println ""
-  println "     $project.name $project.gradle.startParameter.taskNames"
+  println "     Module: $project.name-v${utils.currentDate} $project.gradle.startParameter.taskNames"
   println ""
 }
 
-ext.setupArrowModule = {
+ext.setupProperties = {
   def customProperties = new Properties()
   def customPropertiesURL = new URL("https://github.com/AlexRogalskiy/gradle-java-sample/blob/master/gradle.properties")
   def customPropertiesStream = customPropertiesURL.openStream()
@@ -24,5 +34,9 @@ ext.setupArrowModule = {
   customProperties.each { key, value -> ext.set(key, value) }
 }
 
-setupArrowModule()
-showBanner()
+ext.utils = [
+  "currentDate": currentDateTime('yyyyMMdd'),
+  "currentTime": currentDateTime('yyyyMMdd-HH:mm:ss')
+]
+
+init()

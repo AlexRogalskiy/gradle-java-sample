@@ -120,17 +120,21 @@ ext.versions = [
   "junit5"         : "5.7.0",
   "junit5_platform": "1.7.0",
 ]
-ext.deps = [
-  "guava"          : "com.google.guava:guava:${versions.guava}",
-  "commons_lang"   : "org.apache.commons:commons-lang3:${versions.commons_lang}",
-  "lombok"         : "org.projectlombok:lombok:${versions.lombok}",
-  "assertj"        : "org.assertj:assertj-core:${versions.assertj}",
-  "hamcrest"       : "org.hamcrest:hamcrest:${versions.hamcrest}",
-  "junit5_api"     : "org.junit.jupiter:junit-jupiter-api:${versions.junit5}",
-  "junit5_engine"  : "org.junit.jupiter:junit-jupiter-engine:${versions.junit5}",
-  "junit5_params"  : "org.junit.jupiter:junit-jupiter-params:${versions.junit5}",
-  "junit5_runner"  : "org.junit.platform:junit-platform-runner:${versions.junit5_platform}",
-  "junit5_launcher": "org.junit.platform:junit-platform-launcher:${versions.junit5_platform}",
+ext.libraries = [
+  common : [
+    "guava"       : "com.google.guava:guava:${versions.guava}",
+    "commons_lang": "org.apache.commons:commons-lang3:${versions.commons_lang}",
+    "lombok"      : "org.projectlombok:lombok:${versions.lombok}"
+  ],
+  testing: [
+    "assertj"        : "org.assertj:assertj-core:${versions.assertj}",
+    "hamcrest"       : "org.hamcrest:hamcrest:${versions.hamcrest}",
+    "junit5_api"     : "org.junit.jupiter:junit-jupiter-api:${versions.junit5}",
+    "junit5_engine"  : "org.junit.jupiter:junit-jupiter-engine:${versions.junit5}",
+    "junit5_params"  : "org.junit.jupiter:junit-jupiter-params:${versions.junit5}",
+    "junit5_runner"  : "org.junit.platform:junit-platform-runner:${versions.junit5_platform}",
+    "junit5_launcher": "org.junit.platform:junit-platform-launcher:${versions.junit5_platform}"
+  ]
 ]
 ext {
   excludeJunit = { exclude group: 'junit', module: 'junit' }

@@ -86,31 +86,31 @@ subprojects {
 
   dependencies {
     // guava library dependencies
-    implementation deps.guava
+    implementation libraries.common.guava
 
     // commons lang library dependencies
-    implementation deps.commons_lang
+    implementation libraries.common.commons_lang
 
     // lombok library dependencies
-    implementation deps.lombok
-    annotationProcessor deps.lombok
+    implementation libraries.common.lombok
+    annotationProcessor libraries.common.lombok
 
     // lombok test library dependencies
-    testImplementation deps.lombok
-    testAnnotationProcessor deps.lombok
+    testImplementation libraries.common.lombok
+    testAnnotationProcessor libraries.common.lombok
 
     // assertj library dependencies
-    testImplementation deps.assertj
+    testImplementation libraries.testing.assertj
 
     // hamcrest library dependencies
-    testImplementation deps.hamcrest
+    testImplementation libraries.testing.hamcrest
 
     // junit test library dependencies
-    testImplementation deps.junit5_api
-    testImplementation deps.junit5_engine
-    testImplementation deps.junit5_params
-    testImplementation deps.junit5_runner
-    testImplementation(deps.junit5_launcher) {
+    testImplementation libraries.testing.junit5_api
+    testImplementation libraries.testing.junit5_engine
+    testImplementation libraries.testing.junit5_params
+    testImplementation libraries.testing.junit5_runner
+    testImplementation(libraries.testing.junit5_launcher) {
       excludeJunit
     }
   }
