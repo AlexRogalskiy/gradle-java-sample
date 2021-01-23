@@ -1,6 +1,6 @@
 plugins {
   id("com.github.ben-manes.versions")
-  id("com.github.johnrengelman.shadow") apply false
+  id("com.github.johnrengelman.shadow")
   id("com.adarshr.test-logger") version "2.1.1"
   id("com.diffplug.spotless") version "5.9.0"
 
@@ -16,15 +16,15 @@ repositories {
   jcenter()
 
   maven {
-    name "JCenter Gradle Plugins repository"
+    name "JCenter gradle plugins repository"
     url "https://dl.bintray.com/gradle/gradle-plugins"
   }
   maven {
-    name "Sonatype Snapshots repository"
+    name "Sonatype snapshots repository"
     url "https://oss.sonatype.org/content/repositories/snapshots/"
   }
   maven {
-    name "Gradle repository"
+    name "Gradle plugins repository"
     url "https://plugins.gradle.org/m2/"
   }
 }
@@ -86,31 +86,31 @@ subprojects {
 
   dependencies {
     // guava library dependencies
-    implementation libraries.common.guava
+    implementation libraries.core.guava
 
     // commons lang library dependencies
-    implementation libraries.common.commons_lang
+    implementation libraries.core.commons_lang
 
     // lombok library dependencies
-    implementation libraries.common.lombok
-    annotationProcessor libraries.common.lombok
+    implementation libraries.core.lombok
+    annotationProcessor libraries.core.lombok
 
     // lombok test library dependencies
-    testImplementation libraries.common.lombok
-    testAnnotationProcessor libraries.common.lombok
+    testImplementation libraries.core.lombok
+    testAnnotationProcessor libraries.core.lombok
 
     // assertj library dependencies
-    testImplementation libraries.testing.assertj
+    testImplementation libraries.test.assertj
 
     // hamcrest library dependencies
-    testImplementation libraries.testing.hamcrest
+    testImplementation libraries.test.hamcrest
 
     // junit test library dependencies
-    testImplementation libraries.testing.junit5_api
-    testImplementation libraries.testing.junit5_engine
-    testImplementation libraries.testing.junit5_params
-    testImplementation libraries.testing.junit5_runner
-    testImplementation(libraries.testing.junit5_launcher) {
+    testImplementation libraries.test.junit5_api
+    testImplementation libraries.test.junit5_engine
+    testImplementation libraries.test.junit5_params
+    testImplementation libraries.test.junit5_runner
+    testImplementation(libraries.test.junit5_launcher) {
       excludeJunit
     }
   }

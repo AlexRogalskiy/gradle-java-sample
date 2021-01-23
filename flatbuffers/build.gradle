@@ -4,15 +4,8 @@ plugins {
   id "io.netifi.flatbuffers" version "1.0.7"
 }
 
-ext.versions = [
-  "flatbuffers": "1.12.0"
-]
-ext.deps = [
-  "flatbuffers": "com.google.flatbuffers:flatbuffers-java:${versions.flatbuffers}"
-]
-
 dependencies {
-  implementation deps.flatbuffers
+  implementation libraries.core.flatbuffers
 }
 
 flatbuffers {

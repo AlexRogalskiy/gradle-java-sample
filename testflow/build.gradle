@@ -1,12 +1,4 @@
-ext.versions = [
-  "spock": "1.2-groovy-2.5"
-]
-ext.deps = [
-  "spock_core"  : "org.spockframework:spock-core:${versions.spock}",
-  "spock_spring": "org.spockframework:spock-spring:${versions.spock}"
-]
-
 dependencies {
-  testImplementation deps.spock_core
-  testImplementation deps.spock_spring
+  testImplementation libraries.test.spock_core
+  testImplementation libraries.test.spock_spring
 }
