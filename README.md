@@ -52,6 +52,12 @@ Explain what these tests test and why
 Give an example
 ```
 
+## Development
+
+[![Edit with Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/AlexRogalskiy/gradle-java-sample)
+
+_Gradle-java-sample_ has experimental support for Gitpod, a pre-configured development environment that runs in your browser. To use Gitpod, click the button below and sign in with GitHub. Gitpod also offers a browser add-on, though it is not required.
+
 ## Deployment
 
 Add additional notes about how to deploy this on a live system
