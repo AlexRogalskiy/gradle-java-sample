@@ -19,7 +19,9 @@ ext.versions = [
   "logback_json"    : "0.1.5",
   "jackson_databind": "2.12.1",
   "janino"          : "3.1.2",
-  "detekt"          : "1.15.0"
+  "detekt"          : "1.15.0",
+  "ktlint"          : "0.29.0",
+  "lint"            : "0.40.0"
 ]
 
 ext.libraries = [

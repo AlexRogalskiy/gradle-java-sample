@@ -16,6 +16,11 @@ repositories {
   jcenter()
 
   maven {
+    name "Jitpack repository"
+    url 'https://jitpack.io'
+  }
+
+  maven {
     name "JCenter gradle plugins repository"
     url "https://dl.bintray.com/gradle/gradle-plugins"
   }
@@ -66,9 +71,9 @@ allprojects {
 }
 
 subprojects {
-  apply from: "${rootDir}/buildSrc/src/main/groovy/setup.gradle"
-  apply from: "${rootDir}/buildSrc/src/main/groovy/dependencies.gradle"
-  apply from: "${rootDir}/buildSrc/src/main/groovy/subproject.gradle"
+  apply from: rootProject.file('buildSrc/src/main/groovy/setup.gradle')
+  apply from: rootProject.file('buildSrc/src/main/groovy/dependencies.gradle')
+  apply from: rootProject.file('buildSrc/src/main/groovy/subproject.gradle')
 
   apply plugin: 'java'
   apply plugin: 'groovy'
