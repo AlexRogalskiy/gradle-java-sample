@@ -8,6 +8,22 @@ def init() {
   setupProperties()
 }
 
+ext {
+  libraryDescription = 'Gradle java sample project'
+
+  siteUrl = 'https://github.com/AlexRogalskiy/gradle-java-sample'
+  gitUrl = 'https://github.com/AlexRogalskiy/gradle-java-sample.git'
+
+  libraryVersion = '0.0.1'
+
+  developerId = 'AlexRogalskiy'
+  developerName = 'Alexander Rogalskiy'
+
+  licenseName = 'The Apache Software License, Version 2.0'
+  licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+  allLicenses = ["Apache-2.0"]
+}
+
 ext.setupBanner = {
   println ""
   println ""
