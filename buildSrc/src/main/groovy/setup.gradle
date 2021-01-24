@@ -8,21 +8,22 @@ def init() {
   setupProperties()
 }
 
-ext {
-  libraryDescription = 'Gradle java sample project'
+ext.info = [
+  'libraryDescription': 'Gradle Java sample project',
 
-  siteUrl = 'https://github.com/AlexRogalskiy/gradle-java-sample'
-  gitUrl = 'https://github.com/AlexRogalskiy/gradle-java-sample.git'
+  'siteUrl'           : 'https://github.com/AlexRogalskiy/gradle-java-sample',
+  'gitUrl'            : 'https://github.com/AlexRogalskiy/gradle-java-sample.git',
 
-  libraryVersion = '0.0.1'
+  'libraryGroup'      : 'io.nullables.api.sample',
+  'libraryVersion'    : '0.0.1',
 
-  developerId = 'AlexRogalskiy'
-  developerName = 'Alexander Rogalskiy'
+  'developerId'       : 'AlexRogalskiy',
+  'developerName'     : 'Alexander Rogalskiy',
 
-  licenseName = 'The Apache Software License, Version 2.0'
-  licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-  allLicenses = ["Apache-2.0"]
-}
+  'licenseName'       : 'The Apache Software License, Version 2.0',
+  'licenseUrl'        : 'http://www.apache.org/licenses/LICENSE-2.0.txt',
+  'allLicenses'       : ["Apache-2.0"]
+]
 
 ext.setupBanner = {
   println ""
@@ -54,5 +55,3 @@ ext.utils = [
   "currentDate": currentDateTime('yyyyMMdd'),
   "currentTime": currentDateTime('yyyyMMdd-HH:mm:ss')
 ]
-
-init()

@@ -65,7 +65,7 @@ afterEvaluate { project ->
           developers {
             developer {
               name = "Alexander Rogalskiy"
-              email 'alexander.rogalsky@yandex.ru'
+              email 'test@gmail.com'
               id 'AlexRogalskiy'
               url 'https://github.com/AlexRogalsky'
               timezone '+3'

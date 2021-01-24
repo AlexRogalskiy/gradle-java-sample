@@ -1,0 +1,127 @@
+apply plugin: 'maven-publish'
+apply plugin: "com.jfrog.bintray"
+apply plugin: 'com.github.dcendents.android-maven'
+apply from: 'setup.gradle'
+
+group = info.libraryGroup
+version = info.libraryVersion
+
+task sourcesJar(type: Jar) {
+  archiveClassifier.set('sources')
+  from android.sourceSets.main.kotlin.srcDirs
+}
+
+task javadocsJar(type: Jar, dependsOn: rootProject.dokka) {
+  archiveClassifier.set('javadoc')
+  from rootProject.dokka.outputDirectory
+}
+
+artifacts {
+  archives javadocsJar
+  archives sourcesJar
+}
+
+publishing {
+  publications {
+    infinum(MavenPublication) {
+      groupId = group
+      artifactId = 'gradle-java-sample'
+
+      pom {
+        name = 'gradle-java-sample'
+        description = 'Gradle java sample project'
+        url = 'https://github.com/AlexRogalskiy/gradle-java-sample'
+        licenses {
+          license {
+            name = 'The Apache License, Version 2.0'
+            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+      }
+      pom.withXml {
+        def root = asNode()
+        def dependenciesNode = root.appendNode('dependencies')
+        configurations.implementation.allDependencies.each {
+          def dependencyNode = dependenciesNode.appendNode('dependency')
+          dependencyNode.appendNode('groupId', it.group)
+          dependencyNode.appendNode('artifactId', it.name)
+          dependencyNode.appendNode('version', it.version)
+        }
+      }
+    }
+  }
+}
+
+bintray {
+  Properties properties = new Properties()
+  def bintrayProperties = rootProject.file('bintray.properties')
+  if (bintrayProperties.exists()) {
+    properties.load(new FileInputStream(bintrayProperties))
+  } else {
+    properties.setProperty("bintray.user", "")
+    properties.setProperty("bintray.apikey", "")
+    properties.setProperty("bintray.gpg_passphrase", "")
+  }
+
+  user = properties.getProperty("bintray.user")
+  key = properties.getProperty("bintray.apikey")
+
+  pkg {
+    repo = 'java'
+    name = 'gradle-java-sample'
+    userOrg = 'AlexRogalskiy'
+    desc = 'Gradle java sample project'
+    websiteUrl = 'https://github.com/AlexRogalskiy/gradle-java-sample'
+    issueTrackerUrl = 'https://github.com/AlexRogalskiy/gradle-java-sample/issues'
+    vcsUrl = 'https://github.com/AlexRogalskiy/gradle-java-sample.git'
+    licenses = ['Apache-2.0']
+    version {
+      name = "${info.libraryVersion}"
+      released = new Date()
+      vcsTag = "${info.libraryVersion}"
+      gpg {
+        sign = true
+        passphrase = properties.getProperty("bintray.gpg_passphrase")
+      }
+    }
+    publish = true
+    override = true
+    publicDownloadNumbers = true
+  }
+
+  configurations = ['archives']
+}
+
+install {
+  repositories.mavenInstaller {
+    pom {
+      project {
+        packaging 'jar'
+        groupId 'io.nullables.api.sample'
+        artifactId 'gradle-java-sample'
+
+        name 'gradle-java-sample'
+        description 'Gradle Java sample project'
+        url 'https://github.com/AlexRogalskiy/gradle-java-sample'
+
+        licenses {
+          license {
+            name 'Apache'
+            url 'https://github.com/AlexRogalskiy/gradle-java-sample/LICENSE'
+          }
+        }
+        developers {
+          developer {
+            id 'AlexRogalskiy'
+            name 'Alexander Rogalskiy'
+          }
+        }
+        scm {
+          connection 'https://github.com/AlexRogalskiy/gradle-java-sample.git'
+          developerConnection 'https://github.com/AlexRogalskiy/gradle-java-sample.git'
+          url 'https://github.com/AlexRogalskiygradle-java-sample'
+        }
+      }
+    }
+  }
+}
