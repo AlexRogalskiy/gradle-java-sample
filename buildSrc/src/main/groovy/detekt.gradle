@@ -1,9 +1,10 @@
 apply plugin: "io.gitlab.arturbosch.detekt"
+apply from: "dependencies.gradle"
 
 detekt {
-    toolVersion = versions.detekt
+  toolVersion = versions.detekt
 }
 
 dependencies {
-    detektPlugins packages.detekt.formatting
+  detektPlugins packages.detekt.formatting
 }
