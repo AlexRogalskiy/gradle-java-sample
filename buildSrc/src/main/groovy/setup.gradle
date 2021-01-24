@@ -3,6 +3,15 @@ static def currentDateTime(final String format) {
   return date.format(format)
 }
 
+def matchesVersion(final String versionTag) {
+  def properties = new Properties()
+  file("${project.rootDir}/gradle.properties").withInputStream { properties.load(it) }
+  def releaseTag = "${properties.getProperty("versionMajor")}." +
+    "${properties.getProperty("versionMinor")}." +
+    "${properties.getProperty("versionPatch")}"
+  return releaseTag == versionTag
+}
+
 def init() {
   setupBanner()
   setupProperties()

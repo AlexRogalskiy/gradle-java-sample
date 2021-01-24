@@ -57,15 +57,30 @@ allprojects {
   def buildProperties = new Properties()
   file(rootDir.absolutePath + "/build.properties").withInputStream { buildProperties.load(it) }
   if (buildProperties.getProperty("build.debug").toBoolean()) {
+
     testlogger {
       theme 'mocha'
       slowThreshold 5000
     }
 
     spotless {
-//    java {
-//      googleJavaFormat()
-//    }
+      format 'misc', {
+        target '**/*.gradle', '**/*.md', '**/.gitignore'
+        targetExclude 'docs/**'
+
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+      }
+      java {
+        target 'build/**/*.java'
+        targetExclude '**/avro/*.java', 'flatbuffers/**/*.java', 'thrift/**/*.java', '**/protobuf/*.java'
+        googleJavaFormat().aosp()
+      }
+      kotlin {
+        target '**/*.kt'
+        ktlint()
+      }
     }
   }
 }
