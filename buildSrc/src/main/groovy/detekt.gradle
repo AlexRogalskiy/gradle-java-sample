@@ -8,3 +8,41 @@ detekt {
 dependencies {
   detektPlugins packages.detekt.formatting
 }
+
+def reportFile = "$project.projectDir.absolutePath/reports/detekt.txt"
+
+task detekt(type: JavaExec) {
+  group = "verification"
+  main = "io.gitlab.arturbosch.detekt.cli.Main"
+  classpath = configurations.detekt
+  def input = "$project.projectDir.absolutePath"
+  def config = "$project.projectDir/detekt.yml"
+  def reports = "txt:$reportFile"
+  def baseline = "$project.projectDir.absolutePath/reports/baseline.xml"
+  def filters = ".*test.*"
+  def params = ["-i", input, "-c", config, "-f", filters, "-r", reports, "-b", baseline]
+  subprojects.each { subproject ->
+    inputs.files fileTree(subproject.projectDir).include("**/src/main/kotlin/**/*.kt")
+  }
+  inputs.file config
+  outputs.file reportFile
+  args(params)
+}
+
+task detektEstablishAcceptedErrors(type: JavaExec) {
+  group = "verification"
+  main = "io.gitlab.arturbosch.detekt.cli.Main"
+  classpath = configurations.detekt
+  def input = "$project.projectDir.absolutePath"
+  def config = "$project.projectDir/detekt.yml"
+  def reports = "txt:$reportFile"
+  def baseline = "$project.projectDir.absolutePath/reports/baseline.xml"
+  def filters = ".*test.*"
+  def params = ["-i", input, "-c", config, "-f", filters, "-r", reports, "-b", baseline, "-cb"]
+  subprojects.each { subproject ->
+    inputs.files fileTree(subproject.projectDir).include("**/src/main/kotlin/**/*.kt")
+  }
+  inputs.file config
+  outputs.file reportFile
+  args(params)
+}

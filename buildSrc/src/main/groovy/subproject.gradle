@@ -53,7 +53,7 @@ tasks.withType(JavaCompile) {
   configure(options) {
     options.encoding = 'UTF-8'
     options.deprecation = true
-    options.compilerArgs += ['--release', '8']
+    //options.compilerArgs += ['--release', '8']
     options.compilerArgs += '-Xlint:deprecation'
     options.compilerArgs += '-Xlint:unchecked'
   }
