@@ -14,7 +14,6 @@ env:
   LC_MESSAGES: "en_US.UTF-8"
   LC_ALL: "en_US.UTF-8"
   LANGUAGE: "en_US:en"
-  JAVA_HOME: ${{ github.workspace }}/jdk
   GRADLE_OPTS: >-
     -Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false
 
@@ -41,4 +40,4 @@ jobs:
         run: sudo chmod +x ./gradlew
 
       - name: Run build
-        run: ./gradlew clean spotlessApply build
+        run: ./gradlew clean spotlessApply build --warning-mode all

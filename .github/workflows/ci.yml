@@ -11,6 +11,12 @@ on:
 
 env:
   CI: true
+  LANG: "en_US.UTF-8"
+  LC_MESSAGES: "en_US.UTF-8"
+  LC_ALL: "en_US.UTF-8"
+  LANGUAGE: "en_US:en"
+  GRADLE_OPTS: >-
+    -Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false
 
 jobs:
   setup:
@@ -67,7 +73,7 @@ jobs:
         run: sudo chmod +x ./gradlew
 
       - name: Run build
-        run: ./gradlew clean spotlessApply build
+        run: ./gradlew clean spotlessApply build --warning-mode all
 
       - name: (Fail-only) Bundle the build report
         if: failure()
