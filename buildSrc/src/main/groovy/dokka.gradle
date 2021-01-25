@@ -6,6 +6,7 @@ dokka {
     subProjects = ["sentinel", "sentinel-no-op", "tool-chucker", "tool-dbinspector", "tool-googleplay"]
     disableAutoconfiguration = false
     cacheRoot = 'default'
+
     configuration {
         moduleName = 'data'
         includeNonPublic = false

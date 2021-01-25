@@ -1,0 +1,9 @@
+plugins {
+  id("com.pablisco.gradle.automodule") version "0.15"
+}
+
+apply plugin: com.pablisco.gradle.automodule.AutoModulePlugin
+
+autoModule {
+  versions = "gradle/versions.properties" as LinkedHashMap
+}

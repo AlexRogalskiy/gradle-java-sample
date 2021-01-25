@@ -29,6 +29,9 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 //ktlint {
 //  version = KTLINT_VERSION
+//  filter {
+//    exclude { projectDir.toURI().relativize(it.file.toURI()).path.contains("/generated/") }
+//  }
 //}
 
 configurations.all { config ->
@@ -102,11 +105,9 @@ test {
 }
 
 ext.projectConfig = [
-  "group"      : 'io.nullables.api.sample',
-  "version"    : '1.0.0-SNAPSHOT',
-  "description": "Gradle java sample project"
-]
-ext.buildConfig = [
+  "group"              : 'io.nullables.api.sample',
+  "version"            : '1.0.0-SNAPSHOT',
+  "description"        : "Gradle java sample project",
   "sourceCompatibility": JavaVersion.VERSION_1_8,
   "targetCompatibility": JavaVersion.VERSION_1_8,
   "projectBuildDir"    : "${rootProject.buildDir}/${project.name}"

@@ -100,11 +100,11 @@ subprojects {
   version projectConfig.version
   description = projectConfig.description
 
-  sourceCompatibility = buildConfig.sourceCompatibility
-  targetCompatibility = buildConfig.targetCompatibility
+  sourceCompatibility = projectConfig.sourceCompatibility
+  targetCompatibility = projectConfig.targetCompatibility
 
   archivesBaseName = project.buildFile
-  project.buildDir = buildConfig.projectBuildDir
+  project.buildDir = projectConfig.projectBuildDir
 
   repositories {
     mavenCentral()
