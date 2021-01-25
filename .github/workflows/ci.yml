@@ -36,6 +36,9 @@ jobs:
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
+      - name: Chmod permissions
+        run: sudo chmod +x ./gradlew
+
       - name: Check Dependency Updates
         run: ./gradlew dependencyUpdates -Drevision=release
 
@@ -60,8 +63,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Chmod permissions
+        run: sudo chmod +x ./gradlew
+
       - name: Run build
-        run: ./gradlew build
+        run: ./gradlew clean spotlessApply build
 
       - name: (Fail-only) Bundle the build report
         if: failure()

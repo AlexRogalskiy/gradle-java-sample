@@ -10,7 +10,13 @@ on:
       - '*'
 
 env:
-  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false"
+  LANG: "en_US.UTF-8"
+  LC_MESSAGES: "en_US.UTF-8"
+  LC_ALL: "en_US.UTF-8"
+  LANGUAGE: "en_US:en"
+  JAVA_HOME: ${{ github.workspace }}/jdk
+  GRADLE_OPTS: >-
+    -Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false
 
 jobs:
   gradle:
@@ -31,5 +37,8 @@ jobs:
           path: ~/.gradle/wrapper/
           key: cache-clean-wrapper-${{ matrix.os }}-${{ matrix.jdk }}
 
-      - name: Run detekt
-        run: ./gradlew build
+      - name: Chmod permissions
+        run: sudo chmod +x ./gradlew
+
+      - name: Run build
+        run: ./gradlew clean spotlessApply build

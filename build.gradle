@@ -16,10 +16,13 @@ repositories {
   jcenter()
 
   maven {
+    name "Artifactory repository"
+    url "https://oss.jfrog.org/artifactory/oss-snapshot-local/"
+  }
+  maven {
     name "Jitpack repository"
     url 'https://jitpack.io'
   }
-
   maven {
     name "JCenter gradle plugins repository"
     url "https://dl.bintray.com/gradle/gradle-plugins"
