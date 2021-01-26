@@ -20,12 +20,12 @@ dependencies {
 protobuf {
   protoc {
     // The artifact spec for the Protobuf Compiler
-    artifact = "com.google.protobuf:protoc:${versions.protobuf}"
+    artifact = libraries.core.protoc
   }
 
   plugins {
     javapgv {
-      artifact = "io.envoyproxy.protoc-gen-validate:protoc-gen-validate:${versions.protoc_gen}"
+      artifact = libraries.core.protoc_gen
     }
   }
 
@@ -41,9 +41,13 @@ protobuf {
 }
 
 sourceSets {
-  main.proto.srcDirs += 'proto'
-  main.proto.srcDirs += 'src/main/schema'
-  test.proto.srcDirs += 'src/test/schema'
+  main {
+    proto {
+      srcDirs += "proto"
+      srcDirs += 'src/main/schema'
+      srcDirs += 'src/test/schema'
+    }
+  }
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

@@ -1,3 +1,13 @@
+ext.projectConfig = [
+  "group"              : 'io.nullables.api.sample',
+  "version"            : '1.0.0-SNAPSHOT',
+  "module"             : "gradle-java-sample",
+  "description"        : "Gradle java sample project",
+  "sourceCompatibility": JavaVersion.VERSION_1_8,
+  "targetCompatibility": JavaVersion.VERSION_1_8,
+  "projectBuildDir"    : "${rootProject.buildDir}/${project.name}"
+]
+
 ext.versions = [
   "guava"           : "30.1-jre",
   "commons_lang"    : "3.11",
@@ -21,7 +31,8 @@ ext.versions = [
   "janino"          : "3.1.2",
   "detekt"          : "1.15.0",
   "ktlint"          : "0.29.0",
-  "lint"            : "0.40.0"
+  "lint"            : "0.40.0",
+  "mockito"         : "3.7.7",
 ]
 
 ext.libraries = [
@@ -36,6 +47,8 @@ ext.libraries = [
     "pgv_java_stub"       : "io.envoyproxy.protoc-gen-validate:pgv-java-stub:${versions.protoc_gen}",
     "netty"               : "io.netty:netty-all:${versions.netty}",
     "protobuf"            : "com.google.protobuf:protobuf-java:${versions.protobuf}",
+    "protoc"              : "com.google.protobuf:protoc:${versions.protobuf}",
+    "protoc_gen"          : "io.envoyproxy.protoc-gen-validate:protoc-gen-validate:${versions.protoc_gen}",
     "flatbuffers"         : "com.google.flatbuffers:flatbuffers-java:${versions.flatbuffers}",
     "avro"                : "org.apache.avro:avro:${versions.avro}",
     "logback"             : "ch.qos.logback:logback-core:${versions.logback}",
@@ -50,6 +63,8 @@ ext.libraries = [
     "hamcrest"       : "org.hamcrest:hamcrest:${versions.hamcrest}",
     "spock_core"     : "org.spockframework:spock-core:${versions.spock}",
     "spock_spring"   : "org.spockframework:spock-spring:${versions.spock}",
+    "mockito"        : "org.mockito:mockito-core:${versions.mockito}",
+    "mockito_junit5" : "org.mockito:mockito-junit-jupiter:${versions.mockito}",
     "junit5_api"     : "org.junit.jupiter:junit-jupiter-api:${versions.junit5}",
     "junit5_engine"  : "org.junit.jupiter:junit-jupiter-engine:${versions.junit5}",
     "junit5_params"  : "org.junit.jupiter:junit-jupiter-params:${versions.junit5}",
