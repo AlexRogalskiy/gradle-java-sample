@@ -8,11 +8,11 @@ option optimize_for = CODE_SIZE;
 
 // The type of payload that should be returned.
 enum PayloadType {
-  // Compressable text format.
-  COMPRESSABLE = 0;
+  // Compressible text format.
+  COMPRESSIBLE = 0;
 
-  // Uncompressable binary format.
-  UNCOMPRESSABLE = 1;
+  // Uncompressible binary format.
+  UNCOMPRESSIBLE = 1;
 
   // Randomly chosen from all other formats defined in this enum.
   RANDOM = 2;
@@ -33,7 +33,7 @@ message SimpleRequest {
   PayloadType response_type = 1;
 
   // Desired payload size in the response from the server.
-  // If response_type is COMPRESSABLE, this denotes the size before compression.
+  // If response_type is COMPRESSIBLE, this denotes the size before compression.
   int32 response_size = 2;
 
   // Optional input payload sent along with the request.
@@ -78,7 +78,7 @@ message StreamingInputCallResponse {
 // Configuration for a particular response.
 message ResponseParameters {
   // Desired payload sizes in responses from the server.
-  // If response_type is COMPRESSABLE, this denotes the size before compression.
+  // If response_type is COMPRESSIBLE, this denotes the size before compression.
   int32 size = 1;
 
   // Desired interval between consecutive responses in the response stream in
