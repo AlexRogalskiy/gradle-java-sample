@@ -40,6 +40,7 @@ afterEvaluate {
         }
       }
     }
+
     repositories {
       maven {
         credentials {
@@ -54,12 +55,30 @@ afterEvaluate {
 
 task sourcesJar(type: Jar, dependsOn: classes) {
   //noinspection GroovyAccessibility //alternatively replace this with archiveClassifier.set('...')
-  archiveClassifier.value = "sources"
+  archiveClassifier.set('sources')
   from sourceSets.main.allSource, 'build/generated/source/kapt/main', 'build/generated/source/kaptKotlin/main'
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
   //noinspection GroovyAccessibility //alternatively replace this with archiveClassifier.set('...')
-  archiveClassifier.value = "javadoc"
+  archiveClassifier.set('javadoc')
   from javadoc.destinationDir
+}
+
+task javadoc(type: Javadoc) {
+  classpath += configurations.javadocDeps
+  destinationDir = file("../javadoc/")
+  // Javadoc will error out for terrible reasons. We can't let it break the build indiscriminately
+  failOnError false
+
+  options.charSet = 'UTF-8'
+  // The JDK 8 doc lint tool is useless for validating html. Disable just that.
+  // Credit for this solution goes to http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+  // Incidentally, I have no idea what the second parameter ('-quiet') means in this context.
+  options.addStringOption('Xdoclint:all,-html', '-quiet')
+}
+
+artifacts {
+  archives sourcesJar
+  archives javadocJar
 }

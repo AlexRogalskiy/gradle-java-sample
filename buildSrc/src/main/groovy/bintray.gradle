@@ -67,7 +67,7 @@ bintray {
   key = properties.getProperty("bintray.apikey")
 
   pkg {
-    repo = 'java'
+    repo = 'maven'
     name = 'gradle-java-sample'
     userOrg = 'AlexRogalskiy'
     desc = 'Gradle java sample project'

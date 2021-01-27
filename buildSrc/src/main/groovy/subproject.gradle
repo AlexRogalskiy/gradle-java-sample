@@ -29,6 +29,9 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 //ktlint {
 //  version = KTLINT_VERSION
+//  filter {
+//    exclude { projectDir.toURI().relativize(it.file.toURI()).path.contains("/generated/") }
+//  }
 //}
 
 configurations.all { config ->
@@ -50,7 +53,8 @@ tasks.withType(JavaCompile) {
   configure(options) {
     options.encoding = 'UTF-8'
     options.deprecation = true
-    options.compilerArgs += ['--release', '8']
+    options.warnings = true
+    //options.compilerArgs += ['--release', '8']
     options.compilerArgs += '-Xlint:deprecation'
     options.compilerArgs += '-Xlint:unchecked'
   }
@@ -100,14 +104,3 @@ test {
     showFailedStandardStreams true
   }
 }
-
-ext.projectConfig = [
-  "group"      : 'io.nullables.api.sample',
-  "version"    : '1.0.0-SNAPSHOT',
-  "description": "Gradle java sample project"
-]
-ext.buildConfig = [
-  "sourceCompatibility": JavaVersion.VERSION_1_8,
-  "targetCompatibility": JavaVersion.VERSION_1_8,
-  "projectBuildDir"    : "${rootProject.buildDir}/${project.name}"
-]

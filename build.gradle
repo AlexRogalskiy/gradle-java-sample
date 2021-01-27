@@ -7,6 +7,7 @@ plugins {
   id("org.sonarqube")
   id("java")
   id("maven")
+  id("checkstyle")
 }
 
 repositories {
@@ -16,10 +17,13 @@ repositories {
   jcenter()
 
   maven {
+    name "Artifactory repository"
+    url "https://oss.jfrog.org/artifactory/oss-snapshot-local/"
+  }
+  maven {
     name "Jitpack repository"
     url 'https://jitpack.io'
   }
-
   maven {
     name "JCenter gradle plugins repository"
     url "https://dl.bintray.com/gradle/gradle-plugins"
@@ -63,6 +67,10 @@ allprojects {
       slowThreshold 5000
     }
 
+    checkstyle {
+      maxWarnings = 0
+    }
+
     spotless {
       format 'misc', {
         target '**/*.gradle', '**/*.md', '**/.gitignore'
@@ -97,11 +105,15 @@ subprojects {
   version projectConfig.version
   description = projectConfig.description
 
-  sourceCompatibility = buildConfig.sourceCompatibility
-  targetCompatibility = buildConfig.targetCompatibility
+  sourceCompatibility = projectConfig.sourceCompatibility
+  targetCompatibility = projectConfig.targetCompatibility
+
+  compileJava.options.encoding = 'UTF-8'
+  compileTestJava.options.encoding = 'UTF-8'
+  javadoc.options.encoding = 'UTF-8'
 
   archivesBaseName = project.buildFile
-  project.buildDir = buildConfig.projectBuildDir
+  project.buildDir = projectConfig.projectBuildDir
 
   repositories {
     mavenCentral()
@@ -126,11 +138,15 @@ subprojects {
     testImplementation libraries.core.lombok
     testAnnotationProcessor libraries.core.lombok
 
-    // assertj library dependencies
+    // assertj test library dependencies
     testImplementation libraries.test.assertj
 
-    // hamcrest library dependencies
+    // hamcrest test library dependencies
     testImplementation libraries.test.hamcrest
+
+    // mockito test library dependencies
+    testImplementation libraries.test.mockito
+    testImplementation libraries.test.mockito_junit5
 
     // junit test library dependencies
     testImplementation libraries.test.junit5_api
@@ -155,13 +171,14 @@ subprojects {
       }
     }
   }
-}
 
-jar {
-  from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+  jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 
-  manifest {
-    attributes("Class-Path": configurations.compile.collect { it.getPath() }.join(' '))
+    manifest {
+      attributes("Automatic-Module-Name": projectConfig.module)
+      attributes("Class-Path": configurations.compile.collect { it.getPath() }.join(' '))
+    }
   }
 }
 
