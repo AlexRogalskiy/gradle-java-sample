@@ -31,13 +31,16 @@
 - [🚨 Visitor stats](#-visitor-stats)
 - [⚽ Licensing](#-licensing)
 - [🌟 Development Support](#-development-support)
+- [👨‍👨‍👧‍👦 Acknowledgement](#-acknowledgement)
 <!-- /toc -->
 
 ## ☝ _Getting Started_
 
-<a href="https://www.repostatus.org/#active">
-    <img src="https://img.shields.io/badge/Project%20Status-Active-brightgreen?style=for-the-badge" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." />
-</a>
+<p align="left">
+    <a href="https://www.repostatus.org/#active">
+        <img src="https://img.shields.io/badge/Project%20Status-Active-brightgreen?style=for-the-badge" alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." />
+    </a>
+</p>
 
 Gradle Java Sample project is intended to provide minimal bootstrap configuration for various design patterns and prototype implementations.
 
@@ -45,11 +48,11 @@ Gradle Java Sample project is intended to provide minimal bootstrap configuratio
 
 [![alt tag](http://pylonsproject.org/img/logo-jetbrains.png)](https://www.jetbrains.com/)
 
-_gradle-java-sample_ Team would like inform that JetBrains is helping by provided IDE to develop the application. Thanks to its support program for an Open Source projects!
+_gradle-java-sample_ Team would like inform that **JetBrains** is helping by provided IDE to develop the application. Thanks to its support program for an Open Source projects!
 
 [![Edit with Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/AlexRogalskiy/gradle-java-sample)
 
-_gradle-java-sample_ has experimental support for Gitpod, a pre-configured development environment that runs in your browser. To use Gitpod, click the button below and sign in with GitHub. Gitpod also offers a browser add-on, though it is not required.
+_gradle-java-sample_ has experimental support for **Gitpod**, a pre-configured development environment that runs in your browser. To use Gitpod, click the button below and sign in with GitHub. Gitpod also offers a browser add-on, though it is not required.
 
 ## 📝 _Versioning_
 
@@ -97,3 +100,7 @@ Like _gradle-java-sample_ ? Consider buying me a coffee :\)
 [![Become a Patron](https://img.shields.io/badge/Become_Patron-Support_me_on_Patreon-blue.svg?style=flat-square&logo=patreon&color=e64413)](https://www.patreon.com/alexrogalskiy)
 [![Buy Me A Coffee](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-yellow.svg?logo=buy%20me%20a%20coffee)](https://www.buymeacoffee.com/AlexRogalskiy)
 [![KoFi](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-yellow.svg?logo=ko-fi)](https://ko-fi.com/alexrogalskiy)
+
+## 👨‍👨‍👧‍👦 _Acknowledgement_
+
+[![Stargazers repo roster for @AlexRogalskiy/gradle-java-sample](https://reporoster.com/stars/AlexRogalskiy/gradle-java-sample)](https://github.com/AlexRogalskiy/gradle-java-sample/stargazers)
