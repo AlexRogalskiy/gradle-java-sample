@@ -42,17 +42,17 @@
     </a>
 </p>
 
-Gradle Java Sample project is intended to provide minimal bootstrap configuration for various design patterns and prototype implementations.
+_**Gradle Java Sample**_ project is intended to provide minimal bootstrap configuration for various design patterns and prototype implementations.
 
 ## 👉 _Development_
 
 [![alt tag](http://pylonsproject.org/img/logo-jetbrains.png)](https://www.jetbrains.com/)
 
-_gradle-java-sample_ Team would like inform that **JetBrains** is helping by provided IDE to develop the application. Thanks to its support program for an Open Source projects!
+_**Gradle Java Sample**_ Team would like inform that **JetBrains** is helping by provided IDE to develop the application. Thanks to its support program for an Open Source projects!
 
 [![Edit with Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/AlexRogalskiy/gradle-java-sample)
 
-_gradle-java-sample_ has experimental support for **Gitpod**, a pre-configured development environment that runs in your browser. To use Gitpod, click the button below and sign in with GitHub. Gitpod also offers a browser add-on, though it is not required.
+_**Gradle Java Sample**_ has experimental support for **Gitpod**, a pre-configured development environment that runs in your browser. To use Gitpod, click the button below and sign in with GitHub. Gitpod also offers a browser add-on, though it is not required.
 
 ## 📝 _Versioning_
 
@@ -60,7 +60,7 @@ The project uses [SemVer](http://semver.org/) for versioning. For the versions a
 
 ## 🌹 _Authors_
 
-_gradle-java-sample_ is maintained by the following GitHub team-members:
+_**Gradle Java Sample**_ is maintained by the following GitHub team-members:
 
 * [![Author](https://img.shields.io/badge/author-AlexRogalskiy-FB8F0A)](https://github.com/AlexRogalskiy)
 
@@ -84,7 +84,7 @@ See also the list of [contributors](https://github.com/AlexRogalskiy/gradle-java
 
 ## ⚽ _Licensing_
 
-_gradle-java-sample_ is distributed under LGPL version 3 or later, see COPYING.LESSER\(LGPL\) and COPYING\(GPL\).
+_**Gradle Java Sample**_ is distributed under LGPL version 3 or later, see COPYING.LESSER\(LGPL\) and COPYING\(GPL\).
 LGPLv3 is additional permissions on top of GPLv3.
 
 ![image](https://user-images.githubusercontent.com/19885116/48661948-6cf97e80-ea7a-11e8-97e7-b45332a13e49.png)
@@ -95,7 +95,7 @@ LGPLv3 is additional permissions on top of GPLv3.
 
 ## 🌟 _Development Support_
 
-Like _gradle-java-sample_ ? Consider buying me a coffee :\)
+Like _**Gradle Java Sample**_ ? Consider buying me a coffee :\)
 
 [![Become a Patron](https://img.shields.io/badge/Become_Patron-Support_me_on_Patreon-blue.svg?style=flat-square&logo=patreon&color=e64413)](https://www.patreon.com/alexrogalskiy)
 [![Buy Me A Coffee](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-yellow.svg?logo=buy%20me%20a%20coffee)](https://www.buymeacoffee.com/AlexRogalskiy)
