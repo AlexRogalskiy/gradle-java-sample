@@ -67,10 +67,6 @@ allprojects {
       slowThreshold 5000
     }
 
-    checkstyle {
-      maxWarnings = 0
-    }
-
     spotless {
       format 'misc', {
         target '**/*.gradle', '**/*.md', '**/.gitignore'
