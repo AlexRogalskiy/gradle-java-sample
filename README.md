@@ -104,8 +104,3 @@ Like _**Gradle Java Sample**_ ? Consider buying me a coffee :\)
 ## 👨‍👨‍👧‍👦 _Acknowledgement_
 
 [![Stargazers repo roster for @AlexRogalskiy/gradle-java-sample](https://reporoster.com/stars/AlexRogalskiy/gradle-java-sample)](https://github.com/AlexRogalskiy/gradle-java-sample/stargazers)
-
-## ⏰ _Recent activities_
-
-<!--START_SECTION:activity-->
-<!--END_SECTION:activity-->
