@@ -67,12 +67,46 @@ clean.doFirst {
 sourceSets {
   main.java.srcDirs += "src/main/java"
   test.java.srcDirs += "src/test/java"
+
+  functionalTest {
+    java {
+      srcDir file('src/functionalTest/java')
+    }
+    resources {
+      srcDir file('src/functionalTest/resources')
+    }
+    compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+    runtimeClasspath += output + compileClasspath
+  }
 }
 
+task functionalTest(type: Test) {
+  testClassesDirs = sourceSets.functionalTest.output.classesDirs
+  classpath = sourceSets.functionalTest.runtimeClasspath
+}
+check.dependsOn functionalTest
+
+//gradlePlugin {
+//  testSourceSets sourceSets.functionalTest
+//}
+
 processResources {
-  doFirst {
+  duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
+  with copySpec {
     from 'src/main/resources'
-    filter(ReplaceTokens, tokens: [project_version: project.version, project_name: project.name])
+    include '**/application*.yml'
+    include '**/application*.yaml'
+    include '**/application*.properties'
+
+    project.properties.findAll().each {
+      prop ->
+        if (prop.value != null) {
+          filter(ReplaceTokens, tokens: [(prop.key): String.valueOf(prop.value)])
+          filter(ReplaceTokens, tokens: [('project.' + prop.key): String.valueOf(prop.value)])
+          filter(ReplaceTokens, tokens: [project_version: project.version, project_name: project.name])
+        }
+    }
   }
 }
 

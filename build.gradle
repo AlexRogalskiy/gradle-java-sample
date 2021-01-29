@@ -8,6 +8,7 @@ plugins {
   id("java")
   id("maven")
   id("checkstyle")
+  id("java-gradle-plugin")
 }
 
 repositories {
