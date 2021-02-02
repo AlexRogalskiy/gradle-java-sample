@@ -118,10 +118,11 @@ test {
   useJUnitPlatform()
 
   testLogging {
+    displayGranularity = 2
     showExceptions = true
     showStandardStreams = true
     exceptionFormat = TestExceptionFormat.FULL
-    events "skipped", "failed", "standardOut", "standardError"
+    events "skipped", "passed", "failed", "standardOut", "standardError"
   }
 
   testlogger {
