@@ -2,6 +2,7 @@
  * Set up Checkstyle, Findbugs and PMD to perform extensive code analysis.
  *
  * Gradle tasks added:
+ * - jacocoTestCoverageVerification
  * - checkstyle
  * - findbugs
  * - pmd
@@ -17,9 +18,39 @@ apply plugin: 'pmd'
 def qualityConfigDir = "$project.rootDir/codecheck" as String;
 def reportsDir = "$project.buildDir/reports" as String
 
-check.dependsOn 'checkstyle', 'findbugs', 'pmd'
+check.dependsOn 'checkstyle', 'jacocoTestCoverageVerification', 'findbugs', 'pmd'
 
-task checkstyle(type: Checkstyle, group: 'Verification', description: 'Runs code style checks') {
+task jacocoTestCoverageVerification(
+  type: JacocoCoverageVerification,
+  group: 'Verification',
+  description: 'Jacoco test coverage verification',
+  dependsOn: 'jacocoTestReport'
+) {
+  def jacocoFilter = ['**/BuildConfig.*', '**/*Test*.*', '**/*Exception*.*']
+
+  sourceDirectories.setFrom(files(["$project.projectDir/src/main/java"]))
+  classDirectories.setFrom(files([fileTree(dir: "$project.buildDir/intermediates/javac/debug", excludes: jacocoFilter)]))
+  executionData.setFrom(files("${buildDir}/jacoco/testDebugUnitTest.exec"))
+
+  violationRules {
+    failOnViolation = true
+    rule {
+      element = 'BUNDLE'
+
+      limit {
+        value = 'COVEREDRATIO'
+        counter = 'INSTRUCTION'
+        minimum = 0.8
+      }
+    }
+  }
+}
+
+task checkstyle(
+  type: Checkstyle,
+  group: 'Verification',
+  description: 'Runs code style checks'
+) {
   configFile file("$qualityConfigDir/checkstyle/checkstyle.xml")
   configProperties.checkstyleSuppressionsPath = file("${project.rootDir}/codecheck/checkstyle/suppressions.xml").absolutePath
 
@@ -28,6 +59,7 @@ task checkstyle(type: Checkstyle, group: 'Verification', description: 'Runs code
 
   source 'src'
   include '**/*.java'
+  exclude '**/gen/**'
 
   reports {
     xml.enabled = true
@@ -37,10 +69,12 @@ task checkstyle(type: Checkstyle, group: 'Verification', description: 'Runs code
   classpath = files()
 }
 
-task findbugs(type: FindBugs,
+task findbugs(
+  type: FindBugs,
   group: 'Verification',
   description: 'Inspect java bytecode for bugs',
-  dependsOn: ['compileDebugSources', 'compileReleaseSources']) {
+  dependsOn: ['compileDebugSources', 'compileReleaseSources']
+) {
 
   ignoreFailures = true
   effort = "max"
@@ -66,7 +100,11 @@ task findbugs(type: FindBugs,
   classpath = files()
 }
 
-task pmd(type: Pmd, group: 'Verification', description: 'Inspect sourcecode for bugs') {
+task pmd(
+  type: Pmd,
+  group: 'Verification',
+  description: 'Inspect sourcecode for bugs'
+) {
   ruleSetFiles = files("$qualityConfigDir/pmd/pmd-ruleset.xml")
   ignoreFailures = true
   ruleSets = []
