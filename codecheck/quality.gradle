@@ -23,8 +23,8 @@ check.dependsOn 'checkstyle', 'jacocoTestCoverageVerification', 'findbugs', 'pmd
 task jacocoTestCoverageVerification(
   type: JacocoCoverageVerification,
   group: 'Verification',
-  description: 'Jacoco test coverage verification',
-  dependsOn: 'jacocoTestReport'
+  description: 'Jacoco test coverage verification'
+  //dependsOn: 'jacocoTestReport'
 ) {
   def jacocoFilter = ['**/BuildConfig.*', '**/*Test*.*', '**/*Exception*.*']
 
@@ -43,6 +43,40 @@ task jacocoTestCoverageVerification(
         minimum = 0.8
       }
     }
+  }
+}
+
+task codeCoverageReport(type: JacocoReport, group: "Coverage reports") {
+  executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+  dependsOn javaProjects*.test
+
+  javaProjects.each {
+    sourceSets it.sourceSets.main
+  }
+
+  reports {
+    xml.enabled = true
+    xml.destination new File("${buildDir}/reports/jacoco/report.xml")
+    html.enabled = true
+    html.destination new File("${buildDir}/reports/jacoco/html")
+    csv.enabled = false
+  }
+  afterEvaluate {
+    // Exclude generated files from top-level coverage report
+    classDirectories.setFrom(
+      files(
+        classDirectories.files.collect {
+          fileTree(
+            dir: it,
+            exclude: [
+              "**/com/netflix/genie/proto/**",
+              "**/com/netflix/genie/web/data/entities/*_*",
+            ]
+          )
+        }
+      )
+    )
   }
 }
 

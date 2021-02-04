@@ -117,6 +117,9 @@ java {
 test {
   useJUnitPlatform()
 
+  minHeapSize = "256m"
+  maxHeapSize = "2g"
+
   testLogging {
     displayGranularity = 2
     showExceptions = true

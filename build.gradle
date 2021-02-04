@@ -3,6 +3,8 @@ plugins {
   id("com.github.johnrengelman.shadow")
   id("com.adarshr.test-logger") version "2.1.1"
   id("com.diffplug.spotless") version "5.9.0"
+  id("com.gorylenko.gradle-git-properties") version "2.2.4"
+  id("io.franzbecker.gradle-lombok") version "4.0.0"
 
   id("org.sonarqube")
   id("java")
@@ -59,6 +61,20 @@ allprojects {
     }
   }
 
+//  jacocoTestReport {
+//    reports {
+//      html.enabled = true
+//      xml.enabled = true
+//      csv.enabled = false
+//    }
+//  }
+
+  gitProperties {
+    failOnNoGitDirectory = false
+    dateFormat = "yyyy-MM-dd'T'HH:mmZ"
+    dateFormatTimeZone = "PST"
+  }
+
   def buildProperties = new Properties()
   file(rootDir.absolutePath + "/build.properties").withInputStream { buildProperties.load(it) }
   if (buildProperties.getProperty("build.debug").toBoolean()) {
@@ -104,10 +120,6 @@ subprojects {
 
   sourceCompatibility = projectConfig.sourceCompatibility
   targetCompatibility = projectConfig.targetCompatibility
-
-  compileJava.options.encoding = 'UTF-8'
-  compileTestJava.options.encoding = 'UTF-8'
-  javadoc.options.encoding = 'UTF-8'
 
   archivesBaseName = project.buildFile
   project.buildDir = projectConfig.projectBuildDir

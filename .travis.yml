@@ -39,6 +39,7 @@ notifications:
 
 before_cache:
   - rm -rf $HOME/.gradle/repository/
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 
 cache:
   directories:

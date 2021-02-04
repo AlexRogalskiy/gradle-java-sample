@@ -55,5 +55,26 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 compileJava {
+  options.encoding = 'UTF-8'
   options.compilerArgs += ["-proc:none"]
+  options.annotationProcessorGeneratedSourcesDirectory = project.generatedSourcesJavaDir
+  options.compilerArgs += [
+    "-Xlint:unchecked",
+    "-Xlint:deprecation",
+    "-proc:none",
+    "-s",
+    project.generatedSourcesJavaDir
+  ]
+}
+
+compileTestJava {
+  options.encoding = 'UTF-8'
+  options.compilerArgs += [
+    "-Xlint:unchecked",
+    "-Xlint:deprecation"
+  ]
+}
+
+javadoc {
+  options.encoding = 'UTF-8'
 }
