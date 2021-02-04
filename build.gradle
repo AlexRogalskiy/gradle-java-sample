@@ -39,6 +39,10 @@ repositories {
     name "Gradle plugins repository"
     url "https://plugins.gradle.org/m2/"
   }
+  maven {
+    name "IceRockDev gradle plugins repository"
+    url "https://dl.bintray.com/icerockdev/plugins"
+  }
 }
 
 allprojects {
@@ -136,8 +140,12 @@ subprojects {
     // guava library dependencies
     implementation libraries.core.guava
 
-    // commons lang library dependencies
+    // commons library dependencies
     implementation libraries.core.commons_lang
+    implementation libraries.core.commons_text
+
+    // javapoet library dependencies
+    implementation libraries.core.javapoet
 
     // lombok library dependencies
     implementation libraries.core.lombok

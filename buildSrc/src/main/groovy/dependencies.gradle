@@ -11,6 +11,8 @@ ext.projectConfig = [
 ext.versions = [
   "guava"           : "30.1-jre",
   "commons_lang"    : "3.11",
+  "commons_text"    : "1.9",
+  "javapoet"        : "1.13.0",
   "lombok"          : "1.18.16",
   "assertj"         : "3.18.1",
   "hamcrest"        : "2.2",
@@ -41,6 +43,8 @@ ext.libraries = [
   core: [
     "guava"               : "com.google.guava:guava:${versions.guava}",
     "commons_lang"        : "org.apache.commons:commons-lang3:${versions.commons_lang}",
+    "commons_text"        : "org.apache.commons:commons-text:${versions.commons_text}",
+    "javapoet"            : "com.squareup:javapoet:${versions.javapoet}",
     "lombok"              : "org.projectlombok:lombok:${versions.lombok}",
     "javax"               : "javax.annotation:javax.annotation-api:${versions.javax}",
     "thrift"              : "org.apache.thrift:libthrift:${versions.thrift}",
