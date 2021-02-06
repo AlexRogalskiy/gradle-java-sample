@@ -86,7 +86,11 @@ task checkstyle(
   description: 'Runs code style checks'
 ) {
   configFile file("$qualityConfigDir/checkstyle/checkstyle.xml")
-  configProperties.checkstyleSuppressionsPath = file("${project.rootDir}/codecheck/checkstyle/suppressions.xml").absolutePath
+  //configProperties.checkstyleSuppressionsPath = file("${project.rootDir}/codecheck/checkstyle/suppressions.xml").absolutePath
+  configProperties = [
+    'checkstyle.cache.file'      : rootProject.file('build/checkstyle.cache'),
+    'checkstyle.suppression.file': file("${project.rootDir}/codecheck/checkstyle/suppressions.xml")
+  ]
 
   maxWarnings = 0
   ignoreFailures = true
@@ -109,10 +113,10 @@ task findbugs(
   description: 'Inspect java bytecode for bugs',
   dependsOn: ['compileDebugSources', 'compileReleaseSources']
 ) {
-
   ignoreFailures = true
   effort = "max"
   reportLevel = "high"
+  maxHeapSize = "512m"
   excludeFilter = new File("$qualityConfigDir/findbugs/findbugs-exclude-filter.xml")
   classes = files("$project.rootDir/app/build/intermediates/classes") as DefaultTask
 
@@ -153,4 +157,8 @@ task pmd(
     xml.destination = "$reportsDir/pmd/pmd.xml"
     html.destination = "$reportsDir/pmd/pmd.html"
   }
+}
+
+findbugsTest {
+  enabled = false
 }
