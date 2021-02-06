@@ -195,6 +195,7 @@ subprojects {
 
     manifest {
       attributes("Automatic-Module-Name": projectConfig.module)
+      attributes("Build-Date": Instant.now().toString())
       attributes("Class-Path": configurations.compile.collect { it.getPath() }.join(' '))
     }
   }
