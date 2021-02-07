@@ -1,6 +1,11 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
+import java.nio.charset.StandardCharsets
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+
 //compileJava {
 //  doFirst {
 //    options.compilerArgs = [
@@ -96,6 +101,13 @@ check.dependsOn functionalTest
 
 processResources {
   duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
+  doFirst {
+    final File file = new File("$buildDir/resources/main/build-date.txt")
+    if (file.createNewFile()) {
+      file.text = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT)
+    }
+  }
 
   with copySpec {
     from 'src/main/resources'

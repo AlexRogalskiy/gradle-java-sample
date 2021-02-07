@@ -55,8 +55,9 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 compileJava {
+  options.debug = true
   options.encoding = 'UTF-8'
-  options.compilerArgs += ["-proc:none"]
+  options.debugOptions.debugLevel = 'source,vars,lines'
   options.annotationProcessorGeneratedSourcesDirectory = project.generatedSourcesJavaDir
   options.compilerArgs += [
     "-Xlint:unchecked",
