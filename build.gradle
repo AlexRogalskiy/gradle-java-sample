@@ -106,6 +106,8 @@ allprojects {
       kotlin {
         target '**/*.kt'
         ktlint()
+        trimTrailingWhitespace()
+        endWithNewline()
       }
     }
   }
@@ -192,6 +194,7 @@ subprojects {
 
   jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    //from { configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) } }
 
     manifest {
       attributes("Automatic-Module-Name": projectConfig.module)
