@@ -2,7 +2,7 @@ plugins {
   id("com.github.ben-manes.versions")
   id("com.github.johnrengelman.shadow")
   id("com.adarshr.test-logger") version "2.1.1"
-  id("com.diffplug.spotless") version "5.9.0"
+  id("com.diffplug.spotless") version "5.10.2"
   id("com.gorylenko.gradle-git-properties") version "2.2.4"
   id("io.franzbecker.gradle-lombok") version "4.0.0"
 
