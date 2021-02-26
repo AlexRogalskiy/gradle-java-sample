@@ -24,6 +24,9 @@ script:
 
 after_success:
   - if [ -n "$CODECOV_ENABLED" ]; then bash <(curl -s --retry 5 --retry-delay 2 --connect-timeout 2 https://codecov.io/bash) -t $CODECOV_TOKEN; fi
+#  - ./gradlew cobertura coveralls
+  - ./gradlew jacocoTestReport coveralls
+#  - ./gradlew pitest coveralls
 
 after_failure:
   - cat hs_err*

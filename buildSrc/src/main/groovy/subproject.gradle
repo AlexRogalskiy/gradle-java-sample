@@ -1,7 +1,6 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
-import java.nio.charset.StandardCharsets
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -135,6 +134,8 @@ test {
 
   minHeapSize = "256m"
   maxHeapSize = "2g"
+
+  systemProperty 'spring.test.constructor.autowire.mode', 'all'
 
   testLogging {
     displayGranularity = 2

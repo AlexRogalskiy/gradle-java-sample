@@ -5,7 +5,9 @@ plugins {
   id('com.diffplug.spotless') version '5.9.0'
   id('com.gorylenko.gradle-git-properties') version '2.2.4'
   id('io.franzbecker.gradle-lombok') version '4.0.0'
+  id('info.solidsoft.pitest') version '1.5.2'
 
+  id('jacoco')
   id('org.sonarqube')
   id('java')
   id('maven')
@@ -46,7 +48,9 @@ repositories {
 }
 
 allprojects {
+  apply plugin: 'info.solidsoft.pitest'
   apply plugin: 'io.github.robwin.jgitflow'
+  apply plugin: 'com.github.kt3k.coveralls'
   apply plugin: 'com.github.johnrengelman.shadow'
   apply plugin: 'com.adarshr.test-logger'
   apply plugin: 'com.diffplug.spotless'
@@ -67,13 +71,31 @@ allprojects {
     }
   }
 
-//  jacocoTestReport {
-//    reports {
-//      html.enabled = true
-//      xml.enabled = true
-//      csv.enabled = false
-//    }
-//  }
+  pitest {
+    threads.set(4)
+    outputFormats.set(['XML', 'HTML'])
+    timestampedReports.set(false)
+
+    junit5PluginVersion.set('0.12')
+
+    testSourceSets.set([sourceSets.test]) //sourceSets.integrationTest
+    mainSourceSets.set([sourceSets.main]) //sourceSets.additionalMain
+    jvmArgs.set(['-Xmx1024m', '-Dspring.test.constructor.autowire.mode=all'])
+    useClasspathFile.set(true)     //useful with bigger projects on Windows
+    fileExtensionsToFilter.addAll('xml', 'orbit')
+
+    if (project.name in ['appflow', 'avro', 'codecheck', 'db-schema', 'flatbuffers', 'protobuf', 'thrift', 'testflow']) {
+      failWhenNoMutations.set(false)
+    }
+  }
+
+  jacocoTestReport {
+    reports {
+      html.enabled = true
+      xml.enabled = true
+      csv.enabled = false
+    }
+  }
 
   gitProperties {
     failOnNoGitDirectory = false
@@ -84,6 +106,10 @@ allprojects {
   def buildProperties = new Properties()
   file(rootDir.absolutePath + '/build.properties').withInputStream { buildProperties.load(it) }
   if (buildProperties.getProperty('build.debug').toBoolean()) {
+
+    coveralls {
+      jacocoReportPath 'build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml'
+    }
 
     initJGitflow {
       feature = "features/"
