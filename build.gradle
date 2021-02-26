@@ -1,16 +1,16 @@
 plugins {
-  id("com.github.ben-manes.versions")
-  id("com.github.johnrengelman.shadow")
-  id("com.adarshr.test-logger") version "2.1.1"
-  id("com.diffplug.spotless") version "5.9.0"
-  id("com.gorylenko.gradle-git-properties") version "2.2.4"
-  id("io.franzbecker.gradle-lombok") version "4.0.0"
+  id('com.github.ben-manes.versions')
+  id('com.github.johnrengelman.shadow')
+  id('com.adarshr.test-logger') version '2.1.1'
+  id('com.diffplug.spotless') version '5.9.0'
+  id('com.gorylenko.gradle-git-properties') version '2.2.4'
+  id('io.franzbecker.gradle-lombok') version '4.0.0'
 
-  id("org.sonarqube")
-  id("java")
-  id("maven")
-  id("checkstyle")
-  id("java-gradle-plugin")
+  id('org.sonarqube')
+  id('java')
+  id('maven')
+  id('checkstyle')
+  id('java-gradle-plugin')
 }
 
 repositories {
@@ -20,32 +20,33 @@ repositories {
   jcenter()
 
   maven {
-    name "Artifactory repository"
-    url "https://oss.jfrog.org/artifactory/oss-snapshot-local/"
+    name 'Artifactory repository'
+    url 'https://oss.jfrog.org/artifactory/oss-snapshot-local/'
   }
   maven {
-    name "Jitpack repository"
+    name 'Jitpack repository'
     url 'https://jitpack.io'
   }
   maven {
-    name "JCenter gradle plugins repository"
-    url "https://dl.bintray.com/gradle/gradle-plugins"
+    name 'JCenter gradle plugins repository'
+    url 'https://dl.bintray.com/gradle/gradle-plugins'
   }
   maven {
-    name "Sonatype snapshots repository"
-    url "https://oss.sonatype.org/content/repositories/snapshots/"
+    name 'Sonatype snapshots repository'
+    url 'https://oss.sonatype.org/content/repositories/snapshots/'
   }
   maven {
-    name "Gradle plugins repository"
-    url "https://plugins.gradle.org/m2/"
+    name 'Gradle plugins repository'
+    url 'https://plugins.gradle.org/m2/'
   }
   maven {
-    name "IceRockDev gradle plugins repository"
-    url "https://dl.bintray.com/icerockdev/plugins"
+    name 'IceRockDev gradle plugins repository'
+    url 'https://dl.bintray.com/icerockdev/plugins'
   }
 }
 
 allprojects {
+  apply plugin: 'io.github.robwin.jgitflow'
   apply plugin: 'com.github.johnrengelman.shadow'
   apply plugin: 'com.adarshr.test-logger'
   apply plugin: 'com.diffplug.spotless'
@@ -57,12 +58,12 @@ allprojects {
     mavenCentral()
 
     maven {
-      name "KotlinX repository"
-      url "https://kotlin.bintray.com/kotlinx"
+      name 'KotlinX repository'
+      url 'https://kotlin.bintray.com/kotlinx'
     }
     maven {
-      name "Artifactory repository"
-      url "https://oss.jfrog.org/artifactory/oss-snapshot-local/"
+      name 'Artifactory repository'
+      url 'https://oss.jfrog.org/artifactory/oss-snapshot-local/'
     }
   }
 
@@ -77,12 +78,18 @@ allprojects {
   gitProperties {
     failOnNoGitDirectory = false
     dateFormat = "yyyy-MM-dd'T'HH:mmZ"
-    dateFormatTimeZone = "PST"
+    dateFormatTimeZone = 'PST'
   }
 
   def buildProperties = new Properties()
-  file(rootDir.absolutePath + "/build.properties").withInputStream { buildProperties.load(it) }
-  if (buildProperties.getProperty("build.debug").toBoolean()) {
+  file(rootDir.absolutePath + '/build.properties').withInputStream { buildProperties.load(it) }
+  if (buildProperties.getProperty('build.debug').toBoolean()) {
+
+    initJGitflow {
+      feature = "features/"
+      release = "releases/"
+      versiontag = 'v'
+    }
 
     testlogger {
       theme 'mocha'
@@ -181,12 +188,12 @@ subprojects {
   dependencyUpdates.resolutionStrategy {
     componentSelection { rules ->
       rules.all { ComponentSelection selection ->
-        boolean rejected = ["alpha", "beta", "rc", "cr", "m", "preview", "b", "ea", "snapshot"].any {
+        boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'preview', 'b', 'ea', 'snapshot'].any {
           qualifier ->
             selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-+]*/
         }
         if (rejected) {
-          selection.reject("Release candidate")
+          selection.reject('Release candidate')
         }
       }
     }
@@ -194,12 +201,12 @@ subprojects {
 
   jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    //from { configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) } }
+    //from { configurations.runtimeClasspath.get().filter { it.name.endsWith('jar') }.map { zipTree(it) } }
 
     manifest {
-      attributes("Automatic-Module-Name": projectConfig.module)
-      attributes("Build-Date": Instant.now().toString())
-      attributes("Class-Path": configurations.compile.collect { it.getPath() }.join(' '))
+      attributes('Automatic-Module-Name': projectConfig.module)
+      attributes('Build-Date': Instant.now().toString())
+      attributes('Class-Path': configurations.compile.collect { it.getPath() }.join(' '))
     }
   }
 }
@@ -207,18 +214,18 @@ subprojects {
 task stage(dependsOn: ['clean'])
 
 task copyToLib(type: Copy) {
-  from "$buildDir/libs"
-  into "$rootProject.buildDir/libs"
+  from '$buildDir/libs'
+  into '$rootProject.buildDir/libs'
 }
 copyToLib.dependsOn(stage)
 stage.dependsOn(copyToLib)
 
 task copyLicense {
-  outputs.file new File("$buildDir/LICENSE")
+  outputs.file new File('$buildDir/LICENSE')
   doLast {
     copy {
-      from "LICENSE"
-      into "$buildDir"
+      from 'LICENSE'
+      into '$buildDir'
     }
   }
 }

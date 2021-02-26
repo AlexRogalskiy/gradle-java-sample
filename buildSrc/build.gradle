@@ -8,6 +8,7 @@ repositories {
 
 ext.versions = [
   "github_release"  : "2.2.12",
+  "jgitflow"        : "0.6.0",
   "gradle_shadow"   : "5.2.0",
   "gradle_versions" : "0.28.0",
   "gradle_sonarqube": "2.8",
@@ -17,6 +18,7 @@ ext.versions = [
 ]
 ext.deps = [
   "github_release"  : "com.github.breadmoirai:github-release:${versions.github_release}",
+  "jgitflow"         : "io.github.robwin:jgitflow-gradle-plugin:${versions.jgitflow}",
   "gradle_shadow"   : "com.github.jengelman.gradle.plugins:shadow:${versions.gradle_shadow}",
   "gradle_versions" : "com.github.ben-manes:gradle-versions-plugin:${versions.gradle_versions}",
   "gradle_sonarqube": "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${versions.gradle_sonarqube}",
@@ -26,6 +28,7 @@ ext.deps = [
 ]
 
 dependencies {
+  implementation deps.jgitflow
   implementation deps.github_release
   implementation deps.gradle_shadow
   implementation deps.gradle_versions
