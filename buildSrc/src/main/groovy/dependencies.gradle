@@ -1,11 +1,16 @@
+import java.text.SimpleDateFormat
+
 ext.projectConfig = [
   "group"              : 'io.nullables.api.sample',
   "version"            : '1.0.0-SNAPSHOT',
   "module"             : "gradle-java-sample",
   "description"        : "Gradle java sample project",
+  "url"                : "https://github.com/AlexRogalskiy/gradle-java-sample",
+  "license"            : "GPL-3.0",
   "sourceCompatibility": JavaVersion.VERSION_1_8,
   "targetCompatibility": JavaVersion.VERSION_1_8,
-  "projectBuildDir"    : "${rootProject.buildDir}/${project.name}"
+  "projectBuildDir"    : "${rootProject.buildDir}/${project.name}",
+  "vendor"             : System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")"
 ]
 
 ext.versions = [
@@ -82,6 +87,10 @@ ext.libraries = [
 ]
 
 ext {
+  final Date buildTimeAndDate = new Date()
+  buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+  buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+
   generatedSourcesDir = file("${buildDir}/generated/sources")
   generatedSourcesJavaDir = file("${project.generatedSourcesDir}/main/java")
 
