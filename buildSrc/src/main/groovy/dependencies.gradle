@@ -40,8 +40,8 @@ ext.versions = [
   "ktlint"          : "0.29.0",
   "lint"            : "0.40.0",
   "mockito"         : "3.7.7",
-  flyway            : '7.5.2',
-  postgresql        : '42.2.18'
+  "flyway"          : "7.5.2",
+  "postgresql"      : "42.2.18"
 ]
 
 ext.libraries = [
