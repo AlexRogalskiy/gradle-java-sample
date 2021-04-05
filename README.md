@@ -61,6 +61,10 @@ _**Gradle Java Sample**_ has experimental support for **Gitpod**, a pre-configur
 
 The project uses [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/AlexRogalskiy/gradle-java-sample/tags).
 
+## 🐛 _Issues_
+
+[![DeepSource](https://deepsource.io/gh/AlexRogalskiy/gradle-java-sample.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/AlexRogalskiy/gradle-java-sample/?ref=repository-badge)
+
 ## 🌹 _Authors_
 
 _**Gradle Java Sample**_ is maintained by the following GitHub team-members:
