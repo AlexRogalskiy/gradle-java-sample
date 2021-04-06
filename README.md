@@ -20,9 +20,6 @@
 ![GitHub Repository branches](https://badgen.net/github/branches/AlexRogalskiy/gradle-java-sample)
 ![GitHub Repository dependents](https://badgen.net/github/dependents-repo/AlexRogalskiy/gradle-java-sample)
 
-[![dependencies Status](https://status.david-dm.org/gh/AlexRogalskiy/gradle-java-sample.svg)](https://david-dm.org/AlexRogalskiy/gradle-java-sample)
-[![devDependencies Status](https://status.david-dm.org/gh/AlexRogalskiy/gradle-java-sample.svg)](https://david-dm.org/AlexRogalskiy/gradle-java-sample?type=dev)
-
 ## 🎹 _Table of contents_
 
 <!-- toc -->
