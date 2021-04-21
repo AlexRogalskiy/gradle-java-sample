@@ -2,7 +2,7 @@ import com.commercehub.gradle.plugin.avro.GenerateAvroJavaTask
 import com.commercehub.gradle.plugin.avro.GenerateAvroProtocolTask
 
 plugins {
-  id "com.commercehub.gradle.plugin.avro-base" version "0.9.1"
+  id "com.commercehub.gradle.plugin.avro-base" version "0.99.99"
 }
 
 dependencies {
