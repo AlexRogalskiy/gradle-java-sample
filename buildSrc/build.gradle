@@ -1,7 +1,7 @@
 apply plugin: "java"
 
 repositories {
-  mavenLocal() // used to publish and test local gradle plugin changes
+  mavenLocal()
   gradlePluginPortal()
   jcenter()
 }

@@ -57,11 +57,15 @@ tasks.withType(Test) {
   task ->
     // Use JUnit 5 with Jupiter
     useJUnitPlatform()
-    // set heap size for the test JVM(s)
+
+    jvmArgs += [ "-XX:MaxPermSize=512m" ]
+
     minHeapSize = "256m"
     maxHeapSize = "2g"
 
     maxParallelForks = Runtime.runtime.availableProcessors()
+
+    systemProperty 'spring.test.constructor.autowire.mode', 'all'
 
     // Environment properties to be forwarded to the test runtime
     [
@@ -76,8 +80,16 @@ tasks.withType(Test) {
     reports.html.setDestination(new File("${reporting.baseDir}/test/${task.name}"))
     jacocoTestReport.getExecutionData().plus(files("$buildDir/jacoco/${task.name}.exec"))
 
+    forkEvery = 1
+
     // Customize test logging on CI and everywhere else
     testLogging {
+      displayGranularity = 2
+      showExceptions = true
+      showStandardStreams = true
+      exceptionFormat = TestExceptionFormat.FULL
+      events "skipped", "passed", "failed", "standardOut", "standardError"
+
       if (System.getenv("CI") != null) {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
@@ -85,6 +97,32 @@ tasks.withType(Test) {
         events "failed"
       }
     }
+
+    testlogger {
+      theme 'standard-parallel'
+      showExceptions true
+      showStackTraces true
+      showCauses true
+      showFullStackTraces true
+      showSummary true
+      showSimpleNames true
+      showStandardStreams true
+      showPassedStandardStreams false
+      showSkippedStandardStreams false
+      showFailedStandardStreams true
+    }
+
+    afterSuite { desc, result ->
+      if (!desc.parent) {
+        println "\nTest result: ${result.resultType}"
+        println "Test summary: ${result.testCount} tests, " +
+          "${result.successfulTestCount} succeeded, " +
+          "${result.failedTestCount} failed, " +
+          "${result.skippedTestCount} skipped"
+      }
+    }
+
+    finalizedBy jacocoTestReport
 }
 
 tasks.withType(JavaCompile) {
@@ -159,47 +197,4 @@ processResources {
 
 java {
   modularity.inferModulePath.set(true)
-}
-
-test {
-  useJUnitPlatform()
-
-  minHeapSize = "256m"
-  maxHeapSize = "2g"
-
-  systemProperty 'spring.test.constructor.autowire.mode', 'all'
-
-  testLogging {
-    displayGranularity = 2
-    showExceptions = true
-    showStandardStreams = true
-    exceptionFormat = TestExceptionFormat.FULL
-    events "skipped", "passed", "failed", "standardOut", "standardError"
-  }
-
-  testlogger {
-    theme 'standard-parallel'
-    showExceptions true
-    showStackTraces true
-    showCauses true
-    showFullStackTraces true
-    showSummary true
-    showSimpleNames true
-    showStandardStreams true
-    showPassedStandardStreams false
-    showSkippedStandardStreams false
-    showFailedStandardStreams true
-  }
-
-  afterSuite { desc, result ->
-    if (!desc.parent) {
-      println "\nTest result: ${result.resultType}"
-      println "Test summary: ${result.testCount} tests, " +
-        "${result.successfulTestCount} succeeded, " +
-        "${result.failedTestCount} failed, " +
-        "${result.skippedTestCount} skipped"
-    }
-  }
-
-  finalizedBy jacocoTestReport
 }
