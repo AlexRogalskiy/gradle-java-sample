@@ -41,7 +41,8 @@ ext.versions = [
   "lint"            : "0.40.0",
   "mockito"         : "3.7.7",
   "flyway"          : "7.5.2",
-  "postgresql"      : "42.2.18"
+  "postgresql"      : "42.2.18",
+  "spotbugs"        : "4.2.3"
 ]
 
 ext.libraries = [
@@ -69,7 +70,8 @@ ext.libraries = [
     "jackson_databind"    : "com.fasterxml.jackson.core:jackson-databind:${versions.jackson_databind}",
     "janino"              : "org.codehaus.janino:janino:${versions.janino}",
     "flyway"              : "org.flywaydb:flyway-core:${versions.flyway}",
-    "postgresql"          : "org.postgresql:postgresql:${versions.postgresql}"
+    "postgresql"          : "org.postgresql:postgresql:${versions.postgresql}",
+    "spotbugs"            : "com.github.spotbugs:spotbugs-annotations:${versions.spotbugs}"
   ],
   test: [
     "assertj"        : "org.assertj:assertj-core:${versions.assertj}",

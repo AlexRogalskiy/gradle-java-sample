@@ -1,13 +1,18 @@
 import com.vanniktech.dependency.graph.generator.DependencyGraphGeneratorExtension
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+import java.time.Instant
 
 plugins {
-  id("com.github.ben-manes.versions")
-  id("com.github.johnrengelman.shadow")
-  id("com.adarshr.test-logger") version "2.1.1"
-  id("com.diffplug.spotless") version "5.9.0"
-//  id("com.gorylenko.gradle-git-properties") version "2.2.4"
-  id("io.franzbecker.gradle-lombok") version "4.0.0"
-  id("info.solidsoft.pitest") version "1.5.2"
+  id "com.github.ben-manes.versions"
+  id "com.github.johnrengelman.shadow"
+  id "com.github.kt3k.coveralls" version "$coveralls_version"
+  id"com.adarshr.test-logger" version "$test_logger_version"
+  id "com.diffplug.spotless" version "$spotless_version"
+  id "io.franzbecker.gradle-lombok" version "$gradle_lombok_version"
+  id "info.solidsoft.pitest" version "$pitest_version"
+  id "org.springframework.boot" version "$spring_boot_version" apply false
+//  id "com.gorylenko.gradle-git-properties" version "2.2.4"
 
   id("jacoco")
   id("org.sonarqube")
@@ -25,7 +30,7 @@ repositories {
 
   maven {
     name "Artifactory repository"
-    url "https://oss.jfrog.org/artifactory/oss-snapshot-local/"
+    url "https://oss.jfrog.org/artifactory/jcenter-cache/"
   }
   maven {
     name "Jitpack repository"
@@ -59,6 +64,22 @@ allprojects {
   apply plugin: "com.diffplug.spotless"
   apply plugin: "java"
   apply plugin: "jacoco"
+  apply plugin: "io.spring.dependency-management"
+
+  dependencyManagement {
+    imports {
+      mavenBom SpringBootPlugin.BOM_COORDINATES
+      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${spring_cloud_version}"
+      mavenBom "com.google.protobuf:protobuf-bom:${protobuf_version}"
+      mavenBom "io.grpc:grpc-bom:1.21.1"
+      mavenBom "org.spockframework:spock-bom:2.0-M4-groovy-2.5"
+      mavenBom "org.testcontainers:testcontainers-bom:1.15.0"
+    }
+  }
+
+  configurations {
+    all*.exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+  }
 
   repositories {
     jcenter()
@@ -70,7 +91,7 @@ allprojects {
     }
     maven {
       name "Artifactory repository"
-      url "https://oss.jfrog.org/artifactory/oss-snapshot-local/"
+      url "https://oss.jfrog.org/artifactory/jcenter-cache/"
     }
   }
 
@@ -194,6 +215,10 @@ subprojects {
     implementation libraries.core.lombok
     annotationProcessor libraries.core.lombok
 
+    // spotbugs library dependencies
+    implementation libraries.core.spotbugs
+    annotationProcessor libraries.core.spotbugs
+
     // lombok test library dependencies
     testImplementation libraries.core.lombok
     testAnnotationProcessor libraries.core.lombok
@@ -207,6 +232,9 @@ subprojects {
     // mockito test library dependencies
     testImplementation libraries.test.mockito
     testImplementation libraries.test.mockito_junit5
+
+    // spotbugs test library dependencies
+    testImplementation libraries.core.spotbugs
 
     // junit test library dependencies
     testImplementation libraries.test.junit5_api
@@ -270,3 +298,7 @@ task copyLicense {
     }
   }
 }
+
+//task removeGeneratedSources(type: Delete) {
+//  project.generatedSourcesDir.deleteDir()
+//}

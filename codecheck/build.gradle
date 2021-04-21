@@ -17,6 +17,7 @@ apply plugin: "checkstyle"
 apply plugin: "com.github.spotbugs"
 //apply plugin: "findbugs"
 apply plugin: "pmd"
+apply plugin: "com.github.kt3k.coveralls"
 
 def qualityConfigDir = "$project.rootDir/codecheck" as String
 def reportsDir = "$project.buildDir/reports" as String
@@ -186,3 +187,22 @@ task pmdCheck(
 //findbugsTest {
 //  enabled = false
 //}
+
+def javaProjects = subprojects.findAll {
+  it.name != "genie-demo" && it.name != "genie-ddl" && it.name != "genie-docs"
+}
+
+coveralls {
+  sourceDirs = javaProjects.sourceSets.main.allSource.srcDirs.flatten()
+  jacocoReportPath = "${project.buildDir}/reports/jacoco/report.xml"
+}
+
+tasks.coveralls {
+  group = "Coverage reports"
+  description = "Uploads the aggregated coverage report to Coveralls"
+
+  dependsOn codeCoverageReport
+  onlyIf {
+    System.env."CI"
+  }
+}

@@ -54,7 +54,37 @@ configurations.all { config ->
 }
 
 tasks.withType(Test) {
-  maxParallelForks = Runtime.runtime.availableProcessors()
+  task ->
+    // Use JUnit 5 with Jupiter
+    useJUnitPlatform()
+    // set heap size for the test JVM(s)
+    minHeapSize = "256m"
+    maxHeapSize = "2g"
+
+    maxParallelForks = Runtime.runtime.availableProcessors()
+
+    // Environment properties to be forwarded to the test runtime
+    [
+      "CI",
+      "INTEGRATION_TEST_DB",
+    ].each { envVariableName ->
+      if (System.getenv(envVariableName) != null) {
+        systemProperty envVariableName, System.getenv(envVariableName)
+      }
+    }
+
+    reports.html.setDestination(new File("${reporting.baseDir}/test/${task.name}"))
+    jacocoTestReport.getExecutionData().plus(files("$buildDir/jacoco/${task.name}.exec"))
+
+    // Customize test logging on CI and everywhere else
+    testLogging {
+      if (System.getenv("CI") != null) {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+      } else {
+        events "failed"
+      }
+    }
 }
 
 tasks.withType(JavaCompile) {
@@ -65,6 +95,7 @@ tasks.withType(JavaCompile) {
     //options.compilerArgs += ['--release', '8']
     options.compilerArgs += '-Xlint:deprecation'
     options.compilerArgs += '-Xlint:unchecked'
+    //options.compilerArgs += project.generatedSourcesJavaDir
   }
 }
 
@@ -74,6 +105,7 @@ clean.doFirst {
 
 sourceSets {
   main.java.srcDirs += "src/main/java"
+  //main.java.srcDirs += project.generatedSourcesJavaDir
   test.java.srcDirs += "src/test/java"
 
   functionalTest {
