@@ -5,15 +5,6 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
-//compileJava {
-//  doFirst {
-//    options.compilerArgs = [
-//      '--module-path', classpath.asPath,
-//    ]
-//    classpath = files()
-//  }
-//}
-
 //compileKotlin {
 //  kotlinOptions {
 //    freeCompilerArgs += ["-Xskip-runtime-version-check"]
@@ -38,6 +29,22 @@ import java.time.format.DateTimeFormatter
 //  }
 //}
 
+def jvmVersion = System.getProperty('java.version').split('\\.')[0] as Integer
+def useModules = jvmVersion >= 9 && !project.hasProperty('no-modules')
+
+compileJava {
+  if (useModules) {
+    doFirst {
+      options.compilerArgs += [
+        '--module-path', classpath.asPath,
+      ]
+      classpath = files()
+    }
+  }
+  options.compilerArgs += ['-Xlint:-deprecation']
+  options.encoding = 'UTF-8'
+}
+
 jacoco {
   toolVersion = "0.8.2"
 }
@@ -58,7 +65,7 @@ tasks.withType(Test) {
     // Use JUnit 5 with Jupiter
     useJUnitPlatform()
 
-    jvmArgs += [ "-XX:MaxPermSize=512m" ]
+    jvmArgs += ["-XX:MaxPermSize=512m"]
 
     minHeapSize = "256m"
     maxHeapSize = "2g"
@@ -127,6 +134,9 @@ tasks.withType(Test) {
 
 tasks.withType(JavaCompile) {
   configure(options) {
+    if (!useModules) {
+      exclude '*module-info*'
+    }
     options.encoding = 'UTF-8'
     options.deprecation = true
     options.warnings = true
