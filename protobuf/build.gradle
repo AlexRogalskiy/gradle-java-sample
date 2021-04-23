@@ -77,5 +77,8 @@ compileTestJava {
 }
 
 javadoc {
+  options.addStringOption('Xdoclint:all,-missing', '-quiet')
   options.encoding = 'UTF-8'
+  //executable = "${System.getenv("JAVA_HOME")}/bin/javadoc"
+  failOnError true
 }

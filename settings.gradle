@@ -25,6 +25,7 @@ pluginManagement {
 // build scan plugin can only be applied in settings file
 plugins {
   id('com.gradle.enterprise') version '3.5.2'
+  id("com.gradle.enterprise.gradle-enterprise-conventions-plugin").version("0.7.2")
 }
 
 gradleEnterprise {
@@ -37,11 +38,36 @@ gradleEnterprise {
 
 rootProject.name = 'gradle-java-sample'
 
-include 'appflow'
-include 'testflow'
-include 'protobuf'
-include 'flatbuffers'
-include 'avro'
-include 'thrift'
-include 'codecheck'
-include 'db-schema'
+// Find the directories containing a "build.gradle" file in the root directory
+// of the project. That is, every directory containing a "build.gradle" will
+// be automatically the subproject of this project.
+def subDirs = rootDir.listFiles(new FileFilter() {
+  boolean accept(File file) {
+    if (!file.isDirectory()) {
+      return false
+    }
+    if (file.name == 'buildSrc') {
+      return false
+    }
+    return new File(file, 'build.gradle').isFile()
+  }
+})
+
+subDirs.each { File dir ->
+  if (dir.name.startsWith("gradle-")) {
+    include dir.name
+  }
+
+  include 'appflow'
+  include 'testflow'
+  include 'protobuf'
+  include 'flatbuffers'
+  include 'avro'
+  include 'thrift'
+  include 'codecheck'
+  include 'db-schema'
+}
+
+//rootProject.children.forEach {
+//  it.projectDir = rootDir.resolve( "subprojects/${it.name}")
+//}

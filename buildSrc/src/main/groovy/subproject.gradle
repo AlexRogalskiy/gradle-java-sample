@@ -35,6 +35,8 @@ def useModules = jvmVersion >= 9 && !project.hasProperty('no-modules')
 compileJava {
   if (useModules) {
     doFirst {
+      options.fork = true
+      //options.forkOptions.executable = "${System.getenv("JAVA_HOME")}/bin/javac"
       options.compilerArgs += [
         '--module-path', classpath.asPath,
       ]
@@ -64,6 +66,9 @@ tasks.withType(Test) {
   task ->
     // Use JUnit 5 with Jupiter
     useJUnitPlatform()
+
+    // Always run tests, even when nothing changed.
+    dependsOn 'cleanTest'
 
     jvmArgs += ["-XX:MaxPermSize=512m"]
 
@@ -165,6 +170,15 @@ sourceSets {
     }
     compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
     runtimeClasspath += output + compileClasspath
+  }
+}
+
+task createFolders(description: 'Creates the source folders if they do not exist.') doLast {
+  sourceSets*.allSource*.srcDirs*.each { File srcDir ->
+    if (!srcDir.isDirectory()) {
+      println "Creating source folder: ${srcDir}"
+      srcDir.mkdirs()
+    }
   }
 }
 
