@@ -68,6 +68,19 @@ subDirs.each { File dir ->
   include 'db-schema'
 }
 
+//enforce {
+//  rule(enforcer.rules.BanDuplicateClasses) { r ->
+//    r.enabled = false
+//  }
+//  rule(enforcer.rules.ForceDependencies) { r ->
+//    r.dependencies.addAll "org.slf4j:slf4j-api:${slf4jVersion}",
+//      "org.slf4j:jcl-over-slf4j:${slf4jVersion}",
+//      "commons-io:commons-io:${commonsIOVersion}",
+//      "com.jcraft:jsch:${jschVersion}",
+//      "junit:junit:${junitVersion}"
+//  }
+//}
+
 //rootProject.children.forEach {
 //  it.projectDir = rootDir.resolve( "subprojects/${it.name}")
 //}
