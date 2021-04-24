@@ -1,5 +1,5 @@
 ## example Dockerfile for https://docs.docker.com/engine/examples/postgresql_service/
-FROM postgres:12.0
+FROM postgres:12.6
 
 ## Updating dependencies list
 RUN apt-get update
