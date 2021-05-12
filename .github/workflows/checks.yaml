@@ -41,7 +41,7 @@ jobs:
       # install a specific version of Node using
       # https://github.com/actions/setup-node
       - name: Use Node.js v12
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2.1.5
         with:
           node-version: 12
 
