@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package nullables.protobuf.model;
+
+option java_package = "io.nullables.api.sample.protobuf";
+
+option java_multiple_files = true;
+option optimize_for = CODE_SIZE;
+option java_outer_classname = "CardData";
+
+message CreditCard {
+  required string name = 1;
+  required string country = 2;
+  required string currency = 3;
+  required string cardNumber = 4;
+  required bool blocked = 5;
+  required string type = 6;
+}
