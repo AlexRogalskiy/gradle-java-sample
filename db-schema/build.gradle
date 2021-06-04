@@ -2,7 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import org.flywaydb.gradle.task.FlywayMigrateTask
 
 plugins {
-  id "org.flywaydb.flyway" version "7.5.2"
+  id "org.flywaydb.flyway" version "7.9.2"
 }
 
 dependencies {
