@@ -38,7 +38,8 @@ compileJava {
       options.fork = true
       //options.forkOptions.executable = "${System.getenv("JAVA_HOME")}/bin/javac"
       options.compilerArgs += [
-        '--module-path', classpath.asPath,
+        // '--module-path',
+        classpath.asPath,
       ]
       classpath = files()
     }

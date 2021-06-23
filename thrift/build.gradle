@@ -1,5 +1,5 @@
 plugins {
-  id "org.jruyi.thrift" version "0.4.1"
+  id "org.jruyi.thrift" version "0.4.2"
 }
 
 dependencies {
@@ -15,7 +15,7 @@ compileThrift {
   createGenFolder false
 
   generator 'java', 'private-members'
-  //generator 'html'
+  generator 'html'
 }
 
 sourceSets {

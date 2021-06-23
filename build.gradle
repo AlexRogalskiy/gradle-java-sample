@@ -17,7 +17,7 @@ plugins {
   id("jacoco")
   id("org.sonarqube")
   id("java")
-  id("maven")
+  id("maven-publish")
   id("checkstyle")
   id("java-gradle-plugin")
 }
@@ -79,6 +79,12 @@ allprojects {
 
   configurations {
     all*.exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+  }
+
+  java {
+    toolchain {
+      languageVersion = JavaLanguageVersion.of(8)
+    }
   }
 
   repositories {
@@ -186,15 +192,14 @@ subprojects {
   version projectConfig.version
   description = projectConfig.description
 
-  sourceCompatibility = projectConfig.sourceCompatibility
-  targetCompatibility = projectConfig.targetCompatibility
+//  sourceCompatibility = projectConfig.sourceCompatibility
+//  targetCompatibility = projectConfig.targetCompatibility
 
   archivesBaseName = project.buildFile
   project.buildDir = projectConfig.projectBuildDir
 
   repositories {
     mavenCentral()
-    jcenter()
     google()
   }
 
@@ -261,7 +266,7 @@ subprojects {
   }
 
   jar {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    //from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     //from { configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) } }
 
     manifest {
@@ -275,7 +280,7 @@ subprojects {
       attributes("Implementation-Title": projectConfig.module)
       attributes("Implementation-Version": project.version)
       attributes("Created-By": projectConfig.vendor)
-      attributes("Class-Path": configurations.compile.collect { it.getPath() }.join(" "))
+      //attributes("Class-Path": configurations.compile.collect { it.getPath() }.join(" "))
     }
   }
 }
