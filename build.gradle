@@ -277,6 +277,7 @@ subprojects {
       attributes("Build-Time": project.buildTime)
       attributes("Specification-Title": projectConfig.module)
       attributes("Specification-Version": project.version)
+      attributes("Implementation-URL": projectConfig.url)
       attributes("Implementation-Title": projectConfig.module)
       attributes("Implementation-Version": project.version)
       attributes("Created-By": projectConfig.vendor)

@@ -18,7 +18,11 @@ ext.versions = [
   "gradle_versions" : "0.28.0",
   "gradle_sonarqube": "2.8",
   "gradle_dokka"    : "1.4.10",
+  "palantir"        : "1.24.0",
   "semver4j"        : "3.1.0",
+  "spotless"        : "4.5.1",
+  "jmh"             : "0.5.0",
+  "forbiddenapis"   : "3.0.1",
   "gradle_nexus"    : "0.22.0"
 ]
 ext.deps = [
@@ -34,6 +38,10 @@ ext.deps = [
   "gradle_sonarqube": "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${versions.gradle_sonarqube}",
   "gradle_dokka"    : "org.jetbrains.dokka:dokka-gradle-plugin:${versions.gradle_dokka}",
   "semver4j"        : "com.vdurmont:semver4j:${versions.semver4j}",
+  "spotless"        : "com.diffplug.gradle.spotless:${versions.spotless}",
+  "jmh"             : "me.champeau.gradle.jmh:${versions.jmh}",
+  "palantir"        : "com.palantir.consistent-versions:${versions.palantir}",
+  "forbiddenapis"   : "de.thetaphi.forbiddenapis:${versions.forbiddenapis}",
   "gradle_nexus"    : "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:${versions.gradle_nexus}"
 ]
 
