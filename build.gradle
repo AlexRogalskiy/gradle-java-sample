@@ -1,16 +1,15 @@
 import com.vanniktech.dependency.graph.generator.DependencyGraphGeneratorExtension
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
-import java.time.Instant
-
 plugins {
   id "com.github.ben-manes.versions"
   id "com.github.johnrengelman.shadow"
   id "com.github.kt3k.coveralls" version "$coveralls_version"
-  id"com.adarshr.test-logger" version "$test_logger_version"
+  id "com.adarshr.test-logger" version "$test_logger_version"
   id "com.diffplug.spotless" version "$spotless_version"
   id "io.franzbecker.gradle-lombok" version "$gradle_lombok_version"
   id "info.solidsoft.pitest" version "$pitest_version"
+  id 'net.nemerosa.versioning' version "$nemerosa_versioning"
   id "org.springframework.boot" version "$spring_boot_version" apply false
 //  id "com.gorylenko.gradle-git-properties" version "2.2.4"
 
@@ -271,12 +270,13 @@ subprojects {
 
     manifest {
       attributes("Automatic-Module-Name": projectConfig.module)
-      attributes("Built-By": "Robert Winkler")
-      attributes("Build-Date": Instant.now().toString())
       attributes("Build-Date": project.buildDate)
       attributes("Build-Time": project.buildTime)
-      attributes("Specification-Title": projectConfig.module)
-      attributes("Specification-Version": project.version)
+      attributes("Build-With": project.buildWith)
+      attributes("Build-OS": project.buildOs)
+      //attributes("Build-Revision": project.buildVersion)
+      attributes("Specification-Title": project.specTitle)
+      attributes("Specification-Version": project.specVersion)
       attributes("Implementation-URL": projectConfig.url)
       attributes("Implementation-Title": projectConfig.module)
       attributes("Implementation-Version": project.version)

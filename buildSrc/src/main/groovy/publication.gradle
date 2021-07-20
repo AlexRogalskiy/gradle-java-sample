@@ -38,6 +38,12 @@ afterEvaluate {
             }
           }
         }
+
+        versionMapping {
+          usage('java-runtime') {
+            fromResolutionResult()
+          }
+        }
       }
     }
 

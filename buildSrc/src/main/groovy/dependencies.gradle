@@ -3,6 +3,7 @@ import java.text.SimpleDateFormat
 ext.projectConfig = [
   "group"              : 'io.nullables.api.sample',
   "version"            : '1.0.0-SNAPSHOT',
+  "title"              : "java-samples",
   "module"             : "gradle-java-sample",
   "description"        : "Gradle java sample project",
   "url"                : "https://github.com/AlexRogalskiy/gradle-java-sample",
@@ -92,9 +93,22 @@ ext {
   final Date buildTimeAndDate = new Date()
   buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
   buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+  // String.format("%tFT%<tRZ", Calendar.getInstance(TimeZone.getTimeZone("Z")))
+  // buildVersion = versioning.info.commit
+  buildWith = "gradle-${project.getGradle().getGradleVersion()}, groovy-${GroovySystem.getVersion()}"
+  buildOs = "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
+
+  githubUrl = "https://github.com/AlexRogalskiy/${project.name}"
+  issuesUrl = "${project.githubUrl}/issues"
+  vcsUrl = "${project.githubUrl}.git"
+  vcsConnection = "scm:git:git://github.com/AlexRogalskiy/${project.name}.git"
+
+  specTitle = "${projectConfig.title}"
+  specVersion = "${projectConfig.version.substring(0, projectConfig.version.lastIndexOf('-'))}"
 
   generatedSourcesDir = file("${buildDir}/generated/sources")
   generatedSourcesJavaDir = file("${project.generatedSourcesDir}/main/java")
+  generatedSourcesKotlinDir = file("${project.generatedSourcesDir}/main/kotlin")
 
   excludeJunit = { exclude group: 'junit', module: 'junit' }
   excludeChecker = { exclude group: 'edu.washington.cs.types.checker', module: 'checker-framework' }
