@@ -1,0 +1,14 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "test-db",
+            "Group": "Servers",
+            "Port": 5432,
+            "Username": "test",
+            "Host": "172.20.128.2",
+            "SSLMode": "disable",
+            "MaintenanceDB": "postgres",
+            "PassFile": "/pgadmin4/config/passfile.txt"
+        }
+    }
+}

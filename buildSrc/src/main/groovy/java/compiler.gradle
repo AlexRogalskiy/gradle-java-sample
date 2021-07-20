@@ -1,0 +1,35 @@
+package java
+
+configure(rootProject) {
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = sourceCompatibility
+}
+
+allprojects {
+  plugins.withType(JavaPlugin) {
+    tasks.withType(JavaCompile) {
+      sourceCompatibility = rootProject.sourceCompatibility
+      targetCompatibility = rootProject.sourceCompatibility
+      options.encoding = "UTF-8"
+
+      options.compilerArgs += [
+        "--release", "8",
+        "-Xlint:unchecked",
+        "-Xlint:deprecation",
+        "-proc:none",
+        "-Werror",
+      ]
+    }
+
+    tasks.jar {
+      manifest {
+        attributes([
+          'Automatic-Module-Name' : "com.carrotsearch.${project.name.replace('-', '.')}",
+          "Implementation-Vendor" : "Carrot Search s.c. and contributors",
+          "Implementation-Title"  : "${project.name}",
+          "Implementation-Version": "${project.version}"
+        ])
+      }
+    }
+  }
+}

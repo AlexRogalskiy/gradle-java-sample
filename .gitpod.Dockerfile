@@ -19,7 +19,7 @@ LABEL io.nullables.api.playground.image.vendor="Nullables.io"
 LABEL io.nullables.api.playground.image.version=$VERSION
 
 ENV LC_ALL en_US.UTF-8
-ENV LANG ${LC_ALL}
+ENV LANG $LC_ALL
 
 # Downloading and installing Gradle
 # Define a constant with the version of gradle you want to install

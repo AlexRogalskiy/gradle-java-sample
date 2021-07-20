@@ -1,14 +1,9 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
-//compileJava {
-//  doFirst {
-//    options.compilerArgs = [
-//      '--module-path', classpath.asPath,
-//    ]
-//    classpath = files()
-//  }
-//}
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 //compileKotlin {
 //  kotlinOptions {
@@ -34,6 +29,29 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 //  }
 //}
 
+def jvmVersion = System.getProperty('java.version').split('\\.')[0] as Integer
+def useModules = jvmVersion >= 9 && !project.hasProperty('no-modules')
+
+compileJava {
+  if (useModules) {
+    doFirst {
+      options.fork = true
+      //options.forkOptions.executable = "${System.getenv("JAVA_HOME")}/bin/javac"
+      options.compilerArgs += [
+        // '--module-path',
+        classpath.asPath,
+      ]
+      classpath = files()
+    }
+  }
+  options.compilerArgs += ['-Xlint:-deprecation']
+  options.encoding = 'UTF-8'
+}
+
+jacoco {
+  toolVersion = "0.8.2"
+}
+
 configurations.all { config ->
   config.resolutionStrategy {
     cacheChangingModulesFor 0, 'seconds'
@@ -46,17 +64,92 @@ configurations.all { config ->
 }
 
 tasks.withType(Test) {
-  maxParallelForks = Runtime.runtime.availableProcessors()
+  task ->
+    // Use JUnit 5 with Jupiter
+    useJUnitPlatform()
+
+    // Always run tests, even when nothing changed.
+    dependsOn 'cleanTest'
+
+    jvmArgs += ["-XX:MaxPermSize=512m"]
+
+    minHeapSize = "256m"
+    maxHeapSize = "2g"
+
+    maxParallelForks = Runtime.runtime.availableProcessors()
+
+    systemProperty 'spring.test.constructor.autowire.mode', 'all'
+
+    // Environment properties to be forwarded to the test runtime
+    [
+      "CI",
+      "INTEGRATION_TEST_DB",
+    ].each { envVariableName ->
+      if (System.getenv(envVariableName) != null) {
+        systemProperty envVariableName, System.getenv(envVariableName)
+      }
+    }
+
+    reports.html.setDestination(new File("${reporting.baseDir}/test/${task.name}"))
+    jacocoTestReport.getExecutionData().plus(files("$buildDir/jacoco/${task.name}.exec"))
+
+    forkEvery = 1
+
+    // Customize test logging on CI and everywhere else
+    testLogging {
+      displayGranularity = 2
+      showExceptions = true
+      showStandardStreams = true
+      exceptionFormat = TestExceptionFormat.FULL
+      events "skipped", "passed", "failed", "standardOut", "standardError"
+
+      if (System.getenv("CI") != null) {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+      } else {
+        events "failed"
+      }
+    }
+
+    testlogger {
+      theme 'standard-parallel'
+      showExceptions true
+      showStackTraces true
+      showCauses true
+      showFullStackTraces true
+      showSummary true
+      showSimpleNames true
+      showStandardStreams true
+      showPassedStandardStreams false
+      showSkippedStandardStreams false
+      showFailedStandardStreams true
+    }
+
+    afterSuite { desc, result ->
+      if (!desc.parent) {
+        println "\nTest result: ${result.resultType}"
+        println "Test summary: ${result.testCount} tests, " +
+          "${result.successfulTestCount} succeeded, " +
+          "${result.failedTestCount} failed, " +
+          "${result.skippedTestCount} skipped"
+      }
+    }
+
+    finalizedBy jacocoTestReport
 }
 
 tasks.withType(JavaCompile) {
   configure(options) {
+    if (!useModules) {
+      exclude '*module-info*'
+    }
     options.encoding = 'UTF-8'
     options.deprecation = true
     options.warnings = true
     //options.compilerArgs += ['--release', '8']
     options.compilerArgs += '-Xlint:deprecation'
     options.compilerArgs += '-Xlint:unchecked'
+    //options.compilerArgs += project.generatedSourcesJavaDir
   }
 }
 
@@ -66,41 +159,67 @@ clean.doFirst {
 
 sourceSets {
   main.java.srcDirs += "src/main/java"
+  //main.java.srcDirs += project.generatedSourcesJavaDir
   test.java.srcDirs += "src/test/java"
+
+  functionalTest {
+    java {
+      srcDir file('src/functionalTest/java')
+    }
+    resources {
+      srcDir file('src/functionalTest/resources')
+    }
+    compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+    runtimeClasspath += output + compileClasspath
+  }
 }
 
+task createFolders(description: 'Creates the source folders if they do not exist.') doLast {
+  sourceSets*.allSource*.srcDirs*.each { File srcDir ->
+    if (!srcDir.isDirectory()) {
+      println "Creating source folder: ${srcDir}"
+      srcDir.mkdirs()
+    }
+  }
+}
+
+task functionalTest(type: Test) {
+  testClassesDirs = sourceSets.functionalTest.output.classesDirs
+  classpath = sourceSets.functionalTest.runtimeClasspath
+}
+check.dependsOn functionalTest
+
+//gradlePlugin {
+//  testSourceSets sourceSets.functionalTest
+//}
+
 processResources {
+  duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
   doFirst {
+    final File file = new File("$buildDir/resources/main/build-date.txt")
+    if (file.createNewFile()) {
+      file.text = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT)
+    }
+  }
+
+  with copySpec {
     from 'src/main/resources'
-    filter(ReplaceTokens, tokens: [project_version: project.version, project_name: project.name])
+    include '**/application*.yml'
+    include '**/application*.yaml'
+    include '**/application*.properties'
+
+    project.properties.findAll().each {
+      prop ->
+        if (prop.value != null) {
+          filter(ReplaceTokens, tokens: [(prop.key): String.valueOf(prop.value)])
+          filter(ReplaceTokens, tokens: [('project.' + prop.key): String.valueOf(prop.value)])
+          filter(ReplaceTokens, tokens: [project_version: project.version, project_name: project.name])
+        }
+    }
   }
 }
 
 java {
   modularity.inferModulePath.set(true)
-}
-
-test {
-  useJUnitPlatform()
-
-  testLogging {
-    showExceptions = true
-    showStandardStreams = true
-    exceptionFormat = TestExceptionFormat.FULL
-    events "skipped", "failed", "standardOut", "standardError"
-  }
-
-  testlogger {
-    theme 'standard-parallel'
-    showExceptions true
-    showStackTraces true
-    showCauses true
-    showFullStackTraces true
-    showSummary true
-    showSimpleNames true
-    showStandardStreams true
-    showPassedStandardStreams false
-    showSkippedStandardStreams false
-    showFailedStandardStreams true
-  }
 }

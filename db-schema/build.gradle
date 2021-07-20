@@ -1,0 +1,41 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+import org.flywaydb.gradle.task.FlywayMigrateTask
+
+plugins {
+  id "org.flywaydb.flyway" version "7.5.2"
+}
+
+dependencies {
+  implementation libraries.core.flyway
+  implementation libraries.core.postgresql
+}
+
+def profiles = ['dev', 'local']
+
+task flywayMigrateSchema(
+  type: FlywayMigrateTask,
+  dependsOn: ['classes'],
+  group: "flyway",
+  description: 'Migrate DataBase schema',
+) {
+  def confDir = "$buildDir/resources/main/flyway/conf"
+  def activeProfile = project.hasProperty('db') ? project.getProperty('db') : 'local'
+  if (!profiles.contains(activeProfile)) {
+    throw new InvalidUserDataException(String.format("DB migration profile is not valid [%s], supported profiles %s", activeProfile, profiles))
+  }
+  configFiles = ["$confDir/flyway-${activeProfile}.conf"]
+}
+
+processResources {
+  duplicatesStrategy = DuplicatesStrategy.INCLUDE
+  with copySpec {
+    from 'src/main/resources'
+    include '**/flyway*.conf'
+    project.properties.findAll().each {
+      prop ->
+        if (prop.value != null) {
+          filter(ReplaceTokens, tokens: [(prop.key): String.valueOf(prop.value)])
+        }
+    }
+  }
+}

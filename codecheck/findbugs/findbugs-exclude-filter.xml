@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FindBugsFilter>
     <!--
-    Excluded because of the following issue:
-        #1403 NP_NONNULL_PARAM_VIOLATION for completedFuture(null)
-        https://sourceforge.net/p/findbugs/bugs/1403
--->
+        Excluded because of the following issue:
+            #1403 NP_NONNULL_PARAM_VIOLATION for completedFuture(null)
+            https://sourceforge.net/p/findbugs/bugs/1403
+    -->
     <Match>
         <Bug pattern="NP_NONNULL_PARAM_VIOLATION"/>
     </Match>
@@ -27,12 +27,12 @@
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
     </Match>
 
+    <!-- All bugs in test classes, except for JUnit-specific bugs -->
     <Match>
-        <Class name="~.*\.R\$.*"/>
-    </Match>
-
-    <Match>
-        <Class name="~.*\.Manifest\$.*"/>
+        <Class name="~.*\.*Test"/>
+        <Not>
+            <Bug code="IJU"/>
+        </Not>
     </Match>
 
     <!-- All bugs in test classes, except for JUnit-specific bugs -->
@@ -41,5 +41,14 @@
         <Not>
             <Bug code="IJU"/>
         </Not>
+    </Match>
+
+    <Match>
+        <Bug pattern="CN_IMPLEMENTS_CLONE_BUT_NOT_CLONEABLE"/>
+    </Match>
+
+    <Match>
+        <Class name="~.*\.*Preconditions"/>
+        <Bug pattern="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE"/>
     </Match>
 </FindBugsFilter>

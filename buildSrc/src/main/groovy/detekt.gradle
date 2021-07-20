@@ -16,7 +16,7 @@ task detekt(type: JavaExec) {
   main = "io.gitlab.arturbosch.detekt.cli.Main"
   classpath = configurations.detekt
   def input = "$project.projectDir.absolutePath"
-  def config = "$project.projectDir/detekt.yml"
+  def config = "$project.rootDir/codequality/detekt.yml"
   def reports = "txt:$reportFile"
   def baseline = "$project.projectDir.absolutePath/reports/baseline.xml"
   def filters = ".*test.*"

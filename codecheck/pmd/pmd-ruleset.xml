@@ -3,32 +3,38 @@
          xmlns="http://pmd.sf.net/ruleset/1.0.0"
          xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd"
          xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
-
     <description>Custom ruleset for ribot Android application</description>
 
     <exclude-pattern>.*/R.java</exclude-pattern>
     <exclude-pattern>.*/gen/.*</exclude-pattern>
 
-    <rule ref="rulesets/java/android.xml"/>
     <rule ref="rulesets/java/clone.xml"/>
+
     <rule ref="rulesets/java/finalizers.xml"/>
+
     <rule ref="rulesets/java/imports.xml">
         <!-- Espresso is designed this way !-->
         <exclude name="TooManyStaticImports"/>
     </rule>
+
     <rule ref="rulesets/java/logging-java.xml">
         <!-- This rule wasn't working properly and given errors in every var call info -->
         <exclude name="GuardLogStatementJavaUtil"/>
     </rule>
+
     <rule ref="rulesets/java/braces.xml">
         <!-- We allow single line if's without braces -->
         <exclude name="IfStmtsMustUseBraces"/>
     </rule>
+
     <rule ref="rulesets/java/strings.xml">
         <!-- Exclude because causes problems with SQL Strings that usually require duplication -->
         <exclude name="AvoidDuplicateLiterals"/>
+        <exclude name="InefficientEmptyStringCheck"/>
     </rule>
+
     <rule ref="rulesets/java/basic.xml"/>
+
     <rule ref="rulesets/java/naming.xml">
         <exclude name="AbstractNaming"/>
         <exclude name="LongVariable"/>
@@ -36,5 +42,28 @@
         <exclude name="ShortVariable"/>
         <exclude name="ShortClassName"/>
         <exclude name="VariableNamingConventions"/>
+        <exclude name="AvoidFieldNameMatchingMethodName"/>
     </rule>
+
+    <rule ref="rulesets/java/codesize.xml">
+        <exclude name="TooManyMethods"/>
+    </rule>
+
+    <rule ref="rulesets/java/empty.xml"/>
+
+    <rule ref="rulesets/java/empty.xml/EmptyCatchBlock">
+        <properties>
+            <property name="allowCommentedBlocks" value="true"/>
+        </properties>
+    </rule>
+
+    <rule ref="rulesets/java/optimizations.xml">
+        <exclude name="LocalVariableCouldBeFinal"/>
+    </rule>
+
+    <rule ref="rulesets/java/unnecessary.xml">
+        <exclude name="UselessParentheses"/>
+    </rule>
+
+    <rule ref="rulesets/java/unusedcode.xml"/>
 </ruleset>

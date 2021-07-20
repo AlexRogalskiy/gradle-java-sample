@@ -40,6 +40,13 @@ jobs:
       - name: Prepare repository
         run: git fetch --unshallow --tags
 
+      - name: Branch name
+        id: branch_name
+        run: |
+          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+
       - name: Make checksum executable
         run: chmod +x ./scripts/checksum.sh
 
@@ -63,12 +70,22 @@ jobs:
       - name: Check Dependency Updates
         run: ./gradlew dependencyUpdates -Drevision=release
 
-      - uses: actions/cache@v2.1.3
+      - name: Cache gradle
+        uses: actions/cache@v2.1.3
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('checksum.txt') }}
+          #          key: ${{ runner.os }}-gradle-cache-${{ hashFiles('**/*.gradle') }}-${{ hashFiles('**/gradle.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
+      - name: Cache gradle wrapper
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradlew') }}
+          restore-keys: |
+            ${{ runner.os }}-gradlew-
 
   check-style:
     needs: setup
@@ -91,12 +108,22 @@ jobs:
       - name: Prepare repository
         run: git fetch --unshallow --tags
 
-      - uses: actions/cache@v2.1.3
+      - name: Cache gradle
+        uses: actions/cache@v2.1.3
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('checksum.txt') }}
+          #          key: ${{ runner.os }}-gradle-cache-${{ hashFiles('**/*.gradle') }}-${{ hashFiles('**/gradle.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
+      - name: Cache gradle wrapper
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradlew') }}
+          restore-keys: |
+            ${{ runner.os }}-gradlew-
 
       - name: Chmod permissions
         run: sudo chmod +x ./gradlew
@@ -143,18 +170,28 @@ jobs:
       - name: Prepare repository
         run: git fetch --unshallow --tags
 
-      - uses: actions/cache@v2.1.3
+      - name: Cache gradle
+        uses: actions/cache@v2.1.3
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('checksum.txt') }}
+          #          key: ${{ runner.os }}-gradle-cache-${{ hashFiles('**/*.gradle') }}-${{ hashFiles('**/gradle.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
+      - name: Cache gradle wrapper
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradlew') }}
+          restore-keys: |
+            ${{ runner.os }}-gradlew-
 
       - name: Create Build Report
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: wrapper
-          arguments: assembleDebug --scan
+          arguments: assembleDebug build --scan
 
       - name: Upload Sample Artifacts
         uses: actions/upload-artifact@v1

@@ -1,0 +1,78 @@
+version: '3.9'
+
+services:
+  postgresql:
+    build:
+      context: postgres
+      dockerfile: Dockerfile
+    container_name: test-postgres
+    shm_size: 256mb
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-q", "-U", "$POSTGRES_USER", "d", "$POSTGRES_DB" ]
+      start_period: 10s
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - "./postgres/scripts:/docker-entrypoint-initdb.d/"
+    expose:
+      - 5432
+    ports:
+      - "${POSTGRES_SERVER_PORT:-15432}:5432"
+    environment:
+      TZ: Europe/Moscow
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_INITDB_ARGS: "--no-sync"
+    restart: unless-stopped
+    networks:
+      backend-network:
+        ipv4_address: 172.20.128.2
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: test-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/config/servers.json
+      PGADMIN_LISTEN_PORT: ${PGADMIN_PORT:-8081}
+    ports:
+      - "${PGADMIN_SERVER_PORT:-8081}:8081"
+    volumes:
+      - "./pgadmin:/pgadmin4/config"
+    depends_on:
+      - postgresql
+    restart: unless-stopped
+    networks:
+      backend-network:
+        ipv4_address: 172.20.128.3
+
+  flyway:
+    build:
+      context: flyway
+      dockerfile: Dockerfile
+    container_name: test-flyway
+    command: migrate
+    entrypoint: [ "bash", "/flyway/bin/wait-for-db.sh", "172.20.128.2", "5432", "test", "5", "--", "flyway" ]
+    environment:
+      FLYWAY_URL: jdbc:postgresql://172.20.128.2:5432/postgres?sslMode=disable
+      FLYWAY_USER: test
+      FLYWAY_PASSWORD: test
+      FLYWAY_LOCATIONS: filesystem:/flyway/sql
+    volumes:
+      - "../db-schema/src/main/resources/flyway/conf/flyway-local.conf:/flyway/conf/flyway.conf"
+      - "../db-schema/src/main/resources/db/migration:/flyway/sql"
+    depends_on:
+      - postgresql
+    networks:
+      backend-network:
+        ipv4_address: 172.20.128.4
+
+networks:
+  backend-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.128.1
