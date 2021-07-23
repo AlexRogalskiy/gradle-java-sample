@@ -102,6 +102,7 @@ ext {
   issuesUrl = "${project.githubUrl}/issues"
   vcsUrl = "${project.githubUrl}.git"
   vcsConnection = "scm:git:git://github.com/AlexRogalskiy/${project.name}.git"
+  isReleasedVersion = !projectConfig.version.endsWith("-SNAPSHOT")
 
   specTitle = "${projectConfig.title}"
   specVersion = "${projectConfig.version.substring(0, projectConfig.version.lastIndexOf('-'))}"
