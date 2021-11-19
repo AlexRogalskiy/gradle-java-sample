@@ -85,9 +85,9 @@ subDirs.each { File dir ->
 //  it.projectDir = rootDir.resolve("subprojects/${it.name}")
 //}
 
-file('plugins').eachDir { dir ->
-  def projectName = dir.name
-  if (projectName != "build" && findProject(":plugins:${projectName}") == null) {
-    throw new GradleException("Plugin /plugins/${projectName} was not included into the build. Check settings.gradle for details.")
-  }
-}
+//file('plugins').eachDir { dir ->
+//  def projectName = dir.name
+//  if (projectName != "build" && findProject(":plugins:${projectName}") == null) {
+//    throw new GradleException("Plugin /plugins/${projectName} was not included into the build. Check settings.gradle for details.")
+//  }
+//}
