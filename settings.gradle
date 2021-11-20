@@ -3,14 +3,13 @@ pluginManagement {
     mavenCentral()
     mavenLocal()
     google()
-    jcenter()
 
     gradlePluginPortal()
 
-    maven {
-      name 'JCenter Gradle Plugins repository'
-      url 'https://dl.bintray.com/gradle/gradle-plugins'
-    }
+//    maven {
+//      name 'JCenter Gradle Plugins repository'
+//      url 'https://dl.bintray.com/gradle/gradle-plugins'
+//    }
     maven {
       name 'Sonatype Snapshots repository'
       url 'https://oss.sonatype.org/content/repositories/snapshots/'

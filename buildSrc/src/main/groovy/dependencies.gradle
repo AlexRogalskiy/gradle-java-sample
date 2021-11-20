@@ -11,7 +11,7 @@ ext.projectConfig = [
   "sourceCompatibility": JavaVersion.VERSION_1_8,
   "targetCompatibility": JavaVersion.VERSION_1_8,
   "projectBuildDir"    : "${rootProject.buildDir}/${project.name}",
-  "vendor"             : System.properties['java.version'] + " (" + System.properties['java.vendor'] + " " + System.properties['java.vm.version'] + ")"
+  "vendor"             : System.properties['java.version'] + " (" + System.properties['java.vm.vendor'] + " " + System.properties['java.vm.version'] + ")"
 ]
 
 ext.versions = [
@@ -37,7 +37,7 @@ ext.versions = [
   "logback_json"    : "0.1.5",
   "jackson_databind": "2.12.1",
   "janino"          : "3.1.2",
-  "detekt"          : "1.15.0",
+  "detekt"          : "1.19.0-RC2",
   "ktlint"          : "0.29.0",
   "lint"            : "0.40.0",
   "mockito"         : "3.7.7",

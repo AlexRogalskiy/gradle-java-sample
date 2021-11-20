@@ -8,9 +8,18 @@ dependencies {
 }
 
 compileThrift {
+  thriftExecutable "thrift"
+
   includeDirs = [file('src/main/thrift')]
   outputDir = file('src/main/java')
 
+  nowarn true
+  strict true
+  verbose true
+  recurse true
+  debug true
+  allowNegKeys true
+  allow64bitsConsts true
   recurse true
   createGenFolder false
 
