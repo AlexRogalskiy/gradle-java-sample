@@ -3,43 +3,90 @@ pluginManagement {
     mavenCentral()
     mavenLocal()
     google()
-    jcenter()
 
     gradlePluginPortal()
 
+//    maven {
+//      name 'JCenter Gradle Plugins repository'
+//      url 'https://dl.bintray.com/gradle/gradle-plugins'
+//    }
     maven {
-      name "JCenter Gradle Plugins repository"
-      url "https://dl.bintray.com/gradle/gradle-plugins"
+      name 'Sonatype Snapshots repository'
+      url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
     maven {
-      name "Sonatype Snapshots repository"
-      url "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
-    maven {
-      name "Gradle repository"
-      url "https://plugins.gradle.org/m2/"
+      name 'Gradle repository'
+      url 'https://plugins.gradle.org/m2/'
     }
   }
 }
 
 // build scan plugin can only be applied in settings file
 plugins {
-  id("com.gradle.enterprise") version "3.5.1"
+  id('com.gradle.enterprise') version '3.5.2'
+  id("com.gradle.enterprise.gradle-enterprise-conventions-plugin").version("0.7.2")
 }
 
 gradleEnterprise {
   buildScan {
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
-    termsOfServiceAgree = "yes"
+    publishAlways()
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
   }
 }
 
-rootProject.name = "gradle-java-sample"
+rootProject.name = 'gradle-java-sample'
 
-include 'appflow'
-include 'testflow'
-include 'protobuf'
-include 'flatbuffers'
-include 'avro'
-include 'thrift'
-include 'codecheck'
+// Find the directories containing a "build.gradle" file in the root directory
+// of the project. That is, every directory containing a "build.gradle" will
+// be automatically the subproject of this project.
+def subDirs = rootDir.listFiles(new FileFilter() {
+  boolean accept(File file) {
+    if (!file.isDirectory()) {
+      return false
+    }
+    if (file.name == 'buildSrc') {
+      return false
+    }
+    return new File(file, 'build.gradle').isFile()
+  }
+})
+
+subDirs.each { File dir ->
+  if (dir.name.startsWith("gradle-")) {
+    include dir.name
+  }
+
+  include 'appflow'
+  include 'testflow'
+  include 'protobuf'
+  include 'flatbuffers'
+  include 'avro'
+  include 'thrift'
+  include 'codecheck'
+  include 'db-schema'
+}
+
+//enforce {
+//  rule(enforcer.rules.BanDuplicateClasses) { r ->
+//    r.enabled = false
+//  }
+//  rule(enforcer.rules.ForceDependencies) { r ->
+//    r.dependencies.addAll "org.slf4j:slf4j-api:${slf4jVersion}",
+//      "org.slf4j:jcl-over-slf4j:${slf4jVersion}",
+//      "commons-io:commons-io:${commonsIOVersion}",
+//      "com.jcraft:jsch:${jschVersion}",
+//      "junit:junit:${junitVersion}"
+//  }
+//}
+
+//rootProject.children.forEach {
+//  it.projectDir = rootDir.resolve("subprojects/${it.name}")
+//}
+
+//file('plugins').eachDir { dir ->
+//  def projectName = dir.name
+//  if (projectName != "build" && findProject(":plugins:${projectName}") == null) {
+//    throw new GradleException("Plugin /plugins/${projectName} was not included into the build. Check settings.gradle for details.")
+//  }
+//}

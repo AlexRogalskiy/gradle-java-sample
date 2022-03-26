@@ -1,16 +1,24 @@
+import java.text.SimpleDateFormat
+
 ext.projectConfig = [
   "group"              : 'io.nullables.api.sample',
   "version"            : '1.0.0-SNAPSHOT',
+  "title"              : "java-samples",
   "module"             : "gradle-java-sample",
   "description"        : "Gradle java sample project",
+  "url"                : "https://github.com/AlexRogalskiy/gradle-java-sample",
+  "license"            : "GPL-3.0",
   "sourceCompatibility": JavaVersion.VERSION_1_8,
   "targetCompatibility": JavaVersion.VERSION_1_8,
-  "projectBuildDir"    : "${rootProject.buildDir}/${project.name}"
+  "projectBuildDir"    : "${rootProject.buildDir}/${project.name}",
+  "vendor"             : System.properties['java.version'] + " (" + System.properties['java.vm.vendor'] + " " + System.properties['java.vm.version'] + ")"
 ]
 
 ext.versions = [
   "guava"           : "30.1-jre",
   "commons_lang"    : "3.11",
+  "commons_text"    : "1.9",
+  "javapoet"        : "1.13.0",
   "lombok"          : "1.18.16",
   "assertj"         : "3.18.1",
   "hamcrest"        : "2.2",
@@ -29,16 +37,21 @@ ext.versions = [
   "logback_json"    : "0.1.5",
   "jackson_databind": "2.12.1",
   "janino"          : "3.1.2",
-  "detekt"          : "1.15.0",
+  "detekt"          : "1.19.0-RC2",
   "ktlint"          : "0.29.0",
   "lint"            : "0.40.0",
   "mockito"         : "3.7.7",
+  "flyway"          : "7.5.2",
+  "postgresql"      : "42.2.18",
+  "spotbugs"        : "4.2.3"
 ]
 
 ext.libraries = [
   core: [
     "guava"               : "com.google.guava:guava:${versions.guava}",
     "commons_lang"        : "org.apache.commons:commons-lang3:${versions.commons_lang}",
+    "commons_text"        : "org.apache.commons:commons-text:${versions.commons_text}",
+    "javapoet"            : "com.squareup:javapoet:${versions.javapoet}",
     "lombok"              : "org.projectlombok:lombok:${versions.lombok}",
     "javax"               : "javax.annotation:javax.annotation-api:${versions.javax}",
     "thrift"              : "org.apache.thrift:libthrift:${versions.thrift}",
@@ -56,7 +69,10 @@ ext.libraries = [
     "logback_json_classic": "ch.qos.logback.contrib:logback-json-classic:${versions.logback_json}",
     "logback_jackson"     : "ch.qos.logback.contrib:logback-jackson:${versions.logback_json}",
     "jackson_databind"    : "com.fasterxml.jackson.core:jackson-databind:${versions.jackson_databind}",
-    "janino"              : "org.codehaus.janino:janino:${versions.janino}"
+    "janino"              : "org.codehaus.janino:janino:${versions.janino}",
+    "flyway"              : "org.flywaydb:flyway-core:${versions.flyway}",
+    "postgresql"          : "org.postgresql:postgresql:${versions.postgresql}",
+    "spotbugs"            : "com.github.spotbugs:spotbugs-annotations:${versions.spotbugs}"
   ],
   test: [
     "assertj"        : "org.assertj:assertj-core:${versions.assertj}",
@@ -74,6 +90,27 @@ ext.libraries = [
 ]
 
 ext {
+  final Date buildTimeAndDate = new Date()
+  buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+  buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+  // String.format("%tFT%<tRZ", Calendar.getInstance(TimeZone.getTimeZone("Z")))
+  // buildVersion = versioning.info.commit
+  buildWith = "gradle-${project.getGradle().getGradleVersion()}, groovy-${GroovySystem.getVersion()}"
+  buildOs = "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}"
+
+  githubUrl = "https://github.com/AlexRogalskiy/${project.name}"
+  issuesUrl = "${project.githubUrl}/issues"
+  vcsUrl = "${project.githubUrl}.git"
+  vcsConnection = "scm:git:git://github.com/AlexRogalskiy/${project.name}.git"
+  isReleasedVersion = !projectConfig.version.endsWith("-SNAPSHOT")
+
+  specTitle = "${projectConfig.title}"
+  specVersion = "${projectConfig.version.substring(0, projectConfig.version.lastIndexOf('-'))}"
+
+  generatedSourcesDir = file("${buildDir}/generated/sources")
+  generatedSourcesJavaDir = file("${project.generatedSourcesDir}/main/java")
+  generatedSourcesKotlinDir = file("${project.generatedSourcesDir}/main/kotlin")
+
   excludeJunit = { exclude group: 'junit', module: 'junit' }
   excludeChecker = { exclude group: 'edu.washington.cs.types.checker', module: 'checker-framework' }
 }

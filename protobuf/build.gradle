@@ -55,5 +55,42 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 compileJava {
-  options.compilerArgs += ["-proc:none"]
+  options.debug = true
+  options.encoding = 'UTF-8'
+  options.debugOptions.debugLevel = 'source,vars,lines'
+  options.annotationProcessorGeneratedSourcesDirectory = project.generatedSourcesJavaDir
+  options.compilerArgs += [
+    "-Xlint:unchecked",
+    "-Xlint:deprecation",
+    "-proc:none",
+    "-s",
+    project.generatedSourcesJavaDir
+  ]
+}
+
+compileTestJava {
+  options.encoding = 'UTF-8'
+  options.compilerArgs += [
+    "-Xlint:unchecked",
+    "-Xlint:deprecation"
+  ]
+}
+
+javadoc {
+  options.addStringOption('Xdoclint:all,-missing', '-quiet')
+  options.encoding = 'UTF-8'
+  options.locale = 'en_US'
+  title = 'Gradle Java Sample [' + version + '] API'
+  //executable = "${System.getenv("JAVA_HOME")}/bin/javadoc"
+  failOnError true
+}
+
+// Turning off doclint in JDK 8 Javadoc
+// ref : http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+if (JavaVersion.current().isJava8Compatible()) {
+  allprojects {
+    tasks.withType(Javadoc) {
+      options.addStringOption('Xdoclint:none', '-quiet')
+    }
+  }
 }

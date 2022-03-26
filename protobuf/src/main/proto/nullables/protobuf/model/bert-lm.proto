@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package nullables.protobuf.model;
+
+option java_package = "io.nullables.api.sample.protobuf";
+option java_outer_classname = "BertLmProto";
+option java_multiple_files = true;
+option optimize_for = CODE_SIZE;
+
+service BertLm {
+  rpc Score (ScoreRequest) returns (BertLmResponse);
+  rpc BatchScore (BatchScoreRequest) returns (BatchBertLmResponse);
+}
+
+message Mask {
+  uint32 start = 1;
+  uint32 end = 2;
+  repeated string candidates = 3;
+}
+
+message ScoreRequest {
+  string text = 1;
+  repeated Mask mask = 2;
+}
+
+message Prediction {
+  repeated double score = 1;
+}
+
+message BertLmResponse {
+  repeated Prediction scores = 1;
+}
+
+message BatchScoreRequest {
+  repeated ScoreRequest requests = 1;
+}
+
+message BatchBertLmResponse {
+  repeated BertLmResponse responses = 1;
+}
+

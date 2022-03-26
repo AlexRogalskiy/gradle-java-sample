@@ -1,31 +1,54 @@
-apply plugin: 'java'
+apply plugin: "java"
 
 repositories {
-  mavenLocal() // used to publish and test local gradle plugin changes
+  mavenLocal()
   gradlePluginPortal()
-  jcenter()
 }
 
 ext.versions = [
+  "findbugs"        : "3.0.1",
+  "spotbugs"        : "4.6.2",
   "github_release"  : "2.2.12",
+  "gradle_graph"    : "0.5.0",
+  "pitest"          : "1.5.2",
+  "coveralls"       : "2.8.3",
+  "jgitflow"        : "0.6.0",
   "gradle_shadow"   : "5.2.0",
   "gradle_versions" : "0.28.0",
   "gradle_sonarqube": "2.8",
   "gradle_dokka"    : "1.4.10",
+  "palantir"        : "1.24.0",
   "semver4j"        : "3.1.0",
+  "spotless"        : "4.5.1",
+  "jmh"             : "0.5.0",
+  "forbiddenapis"   : "3.0.1",
   "gradle_nexus"    : "0.22.0"
 ]
 ext.deps = [
+  "findbugs"        : "com.google.code.findbugs:findbugs:${versions.findbugs}",
+  "spotbugs"        : "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:${versions.spotbugs}",
+  "gradle_graph"    : "com.vanniktech:gradle-dependency-graph-generator-plugin:${versions.gradle_graph}",
   "github_release"  : "com.github.breadmoirai:github-release:${versions.github_release}",
+  "pitest"          : "info.solidsoft.gradle.pitest:gradle-pitest-plugin:${versions.pitest}",
+  "coveralls"       : "org.kt3k.gradle.plugin:coveralls-gradle-plugin:${versions.coveralls}",
+  "jgitflow"        : "io.github.robwin:jgitflow-gradle-plugin:${versions.jgitflow}",
   "gradle_shadow"   : "com.github.jengelman.gradle.plugins:shadow:${versions.gradle_shadow}",
   "gradle_versions" : "com.github.ben-manes:gradle-versions-plugin:${versions.gradle_versions}",
   "gradle_sonarqube": "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${versions.gradle_sonarqube}",
   "gradle_dokka"    : "org.jetbrains.dokka:dokka-gradle-plugin:${versions.gradle_dokka}",
   "semver4j"        : "com.vdurmont:semver4j:${versions.semver4j}",
+  "spotless"        : "com.diffplug.gradle.spotless:${versions.spotless}",
+  "jmh"             : "me.champeau.gradle.jmh:${versions.jmh}",
+  "palantir"        : "com.palantir.consistent-versions:${versions.palantir}",
+  "forbiddenapis"   : "de.thetaphi.forbiddenapis:${versions.forbiddenapis}",
   "gradle_nexus"    : "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:${versions.gradle_nexus}"
 ]
 
 dependencies {
+  implementation deps.spotbugs
+  implementation deps.gradle_graph
+//  implementation deps.coveralls
+  implementation deps.jgitflow
   implementation deps.github_release
   implementation deps.gradle_shadow
   implementation deps.gradle_versions

@@ -1,0 +1,75 @@
+task collectDocumentation(group: "documentation", description: "Copy the documentation from sub-projects") {
+  dependsOn "aggregateJavadocs"
+
+  def restDocs = new File(project(":genie-web").buildDir, "docs/asciidoc")
+  def referenceDocs = new File(project(":genie-docs").buildDir, "docs/asciidoc")
+  def demoDocs = new File(project(":genie-demo").buildDir, "docs/asciidoc")
+  def dockerCompose = new File(project(":genie-demo").projectDir, "src/main/docker/docker-compose.yml")
+  def docsDir = new File(project.buildDir, "docs")
+
+  inputs.dir restDocs
+  inputs.dir referenceDocs
+  inputs.dir demoDocs
+  inputs.file dockerCompose
+  outputs.dir docsDir
+
+  doLast {
+    copy {
+      from dockerCompose
+      into new File(docsDir, "demo")
+      filter {
+        it.replace('${GENIE_VERSION}', project.version.toString())
+      }
+    }
+    copy {
+      from restDocs
+      into new File(docsDir, "rest")
+    }
+    copy {
+      from referenceDocs
+      into new File(docsDir, "reference")
+    }
+    copy {
+      from demoDocs
+      into new File(docsDir, "demo")
+    }
+  }
+}
+
+gitPublish {
+  branch = "gh-pages"
+
+  contents {
+    into("docs/${project.version}/") {
+      from "${project.buildDir}/docs/"
+    }
+    into("_releases") {
+      from new File(project(":genie-docs").projectDir, "src/templates/releaseTemplate.md")
+      rename {
+        String fileName -> fileName.replace("releaseTemplate", "${project.version}")
+      }
+      filter {
+        it.replace("GENIE_VERSION", project.version.toString())
+      }
+    }
+  }
+
+  preserve {
+    include "**/*"
+    exclude "docs/${project.version}/"
+  }
+
+  commitMessage = "Documentation generated for ${project.version} by Travis Build ${System.env.TRAVIS_BUILD_NUMBER}".toString()
+}
+
+gitPublishCopy {
+  // This also depends on asciidoctor task for some sub-projects but that dependency is reverse mapped in the
+  // pertinent sub-project build file
+  dependsOn tasks.collectDocumentation
+}
+
+gitPublishPush {
+  onlyIf {
+    System.env."CI"
+  }
+}

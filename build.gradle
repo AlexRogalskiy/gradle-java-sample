@@ -1,33 +1,45 @@
-plugins {
-  id("com.github.ben-manes.versions")
-  id("com.github.johnrengelman.shadow")
-  id("com.adarshr.test-logger") version "2.1.1"
-  id("com.diffplug.spotless") version "5.9.0"
+import com.vanniktech.dependency.graph.generator.DependencyGraphGeneratorExtension
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
+plugins {
+  id "com.github.ben-manes.versions"
+  id "com.github.johnrengelman.shadow"
+  id "com.github.kt3k.coveralls" version "$coveralls_version"
+  id "com.adarshr.test-logger" version "$test_logger_version"
+  id "com.diffplug.spotless" version "$spotless_version"
+  id "io.franzbecker.gradle-lombok" version "$gradle_lombok_version"
+  id "info.solidsoft.pitest" version "$pitest_version"
+  id 'net.nemerosa.versioning' version "$nemerosa_versioning"
+  id "org.springframework.boot" version "$spring_boot_version" apply false
+//  id "com.gorylenko.gradle-git-properties" version "2.2.4"
+
+  id("jacoco")
   id("org.sonarqube")
   id("java")
-  id("maven")
+  id("maven-publish")
   id("checkstyle")
+  id("java-gradle-plugin")
 }
 
 repositories {
   mavenCentral()
   mavenLocal()
+  maven { url "https://repo.spring.io/snapshot" }
+  maven { url "https://repo.spring.io/milestone" }
   google()
-  jcenter()
 
   maven {
     name "Artifactory repository"
-    url "https://oss.jfrog.org/artifactory/oss-snapshot-local/"
+    url "https://oss.jfrog.org/artifactory/jcenter-cache/"
   }
   maven {
     name "Jitpack repository"
-    url 'https://jitpack.io'
+    url "https://jitpack.io"
   }
-  maven {
-    name "JCenter gradle plugins repository"
-    url "https://dl.bintray.com/gradle/gradle-plugins"
-  }
+//  maven {
+//    name "JCenter gradle plugins repository"
+//    url "https://dl.bintray.com/gradle/gradle-plugins"
+//  }
   maven {
     name "Sonatype snapshots repository"
     url "https://oss.sonatype.org/content/repositories/snapshots/"
@@ -36,16 +48,46 @@ repositories {
     name "Gradle plugins repository"
     url "https://plugins.gradle.org/m2/"
   }
+//  maven {
+//    name "IceRockDev gradle plugins repository"
+//    url "https://dl.bintray.com/icerockdev/plugins"
+//  }
 }
 
 allprojects {
-  apply plugin: 'com.github.johnrengelman.shadow'
-  apply plugin: 'com.adarshr.test-logger'
-  apply plugin: 'com.diffplug.spotless'
-  apply plugin: 'java'
+  apply plugin: "com.vanniktech.dependency.graph.generator"
+  apply plugin: "info.solidsoft.pitest"
+  apply plugin: "io.github.robwin.jgitflow"
+//  apply plugin: "com.github.kt3k.coveralls"
+  apply plugin: "com.github.johnrengelman.shadow"
+  apply plugin: "com.adarshr.test-logger"
+  apply plugin: "com.diffplug.spotless"
+  apply plugin: "java"
+  apply plugin: "jacoco"
+  apply plugin: "io.spring.dependency-management"
+
+  dependencyManagement {
+    imports {
+      mavenBom SpringBootPlugin.BOM_COORDINATES
+      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${spring_cloud_version}"
+      mavenBom "com.google.protobuf:protobuf-bom:${protobuf_version}"
+      mavenBom "io.grpc:grpc-bom:1.21.1"
+      mavenBom "org.spockframework:spock-bom:2.0-M4-groovy-2.5"
+      mavenBom "org.testcontainers:testcontainers-bom:1.15.0"
+    }
+  }
+
+  configurations {
+    all*.exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+  }
+
+  java {
+    toolchain {
+      languageVersion = JavaLanguageVersion.of(8)
+    }
+  }
 
   repositories {
-    jcenter()
     mavenCentral()
 
     maven {
@@ -54,81 +96,132 @@ allprojects {
     }
     maven {
       name "Artifactory repository"
-      url "https://oss.jfrog.org/artifactory/oss-snapshot-local/"
+      url "https://oss.jfrog.org/artifactory/jcenter-cache/"
     }
   }
+
+  pitest {
+    threads.set(4)
+    outputFormats.set(["XML", "HTML"])
+    timestampedReports.set(false)
+
+    junit5PluginVersion.set("0.12")
+
+    testSourceSets.set([sourceSets.test]) //sourceSets.integrationTest
+    mainSourceSets.set([sourceSets.main]) //sourceSets.additionalMain
+    jvmArgs.set(["-Xmx1024m", "-Dspring.test.constructor.autowire.mode=all"])
+    useClasspathFile.set(true)     //useful with bigger projects on Windows
+    fileExtensionsToFilter.addAll("xml", "orbit")
+
+    if (project.name in ["appflow", "avro", "codecheck", "db-schema", "flatbuffers", "protobuf", "thrift", "testflow"]) {
+      failWhenNoMutations.set(false)
+    }
+  }
+
+  jacocoTestReport {
+    reports {
+      html.enabled = true
+      xml.enabled = true
+      csv.enabled = false
+    }
+  }
+
+//  gitProperties {
+//    failOnNoGitDirectory = false
+//    dateFormat = "yyyy-MM-dd'T'HH:mmZ"
+//    dateFormatTimeZone = "PST"
+//  }
 
   def buildProperties = new Properties()
   file(rootDir.absolutePath + "/build.properties").withInputStream { buildProperties.load(it) }
   if (buildProperties.getProperty("build.debug").toBoolean()) {
 
+    dependencyGraphGenerator {
+      generators = [DependencyGraphGeneratorExtension.Generator.ALL]
+    }
+
+//    coveralls {
+//      jacocoReportPath "build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+//    }
+
+    initJGitflow {
+      feature = "features/"
+      release = "releases/"
+      versiontag = "v"
+    }
+
     testlogger {
-      theme 'mocha'
+      theme "mocha"
       slowThreshold 5000
     }
 
     spotless {
-      format 'misc', {
-        target '**/*.gradle', '**/*.md', '**/.gitignore'
-        targetExclude 'docs/**'
+      format "misc", {
+        target "**/*.gradle", "**/*.md", "**/.gitignore"
+        targetExclude "docs/**"
 
         trimTrailingWhitespace()
         indentWithSpaces()
         endWithNewline()
       }
       java {
-        target 'build/**/*.java'
-        targetExclude '**/avro/*.java', 'flatbuffers/**/*.java', 'thrift/**/*.java', '**/protobuf/*.java'
+        target "build/**/*.java"
+        targetExclude "**/avro/*.java", "flatbuffers/**/*.java", "thrift/**/*.java", "**/protobuf/*.java"
         googleJavaFormat().aosp()
       }
       kotlin {
-        target '**/*.kt'
+        target "**/*.kt"
         ktlint()
+        trimTrailingWhitespace()
+        endWithNewline()
       }
     }
   }
 }
 
 subprojects {
-  apply from: rootProject.file('buildSrc/src/main/groovy/setup.gradle')
-  apply from: rootProject.file('buildSrc/src/main/groovy/dependencies.gradle')
-  apply from: rootProject.file('buildSrc/src/main/groovy/subproject.gradle')
+  apply from: rootProject.file("buildSrc/src/main/groovy/setup.gradle")
+  apply from: rootProject.file("buildSrc/src/main/groovy/dependencies.gradle")
+  apply from: rootProject.file("buildSrc/src/main/groovy/subproject.gradle")
 
-  apply plugin: 'java'
-  apply plugin: 'groovy'
+  apply plugin: "java"
+  apply plugin: "groovy"
 
   group projectConfig.group
   version projectConfig.version
   description = projectConfig.description
 
-  sourceCompatibility = projectConfig.sourceCompatibility
-  targetCompatibility = projectConfig.targetCompatibility
-
-  compileJava.options.encoding = 'UTF-8'
-  compileTestJava.options.encoding = 'UTF-8'
-  javadoc.options.encoding = 'UTF-8'
+//  sourceCompatibility = projectConfig.sourceCompatibility
+//  targetCompatibility = projectConfig.targetCompatibility
 
   archivesBaseName = project.buildFile
   project.buildDir = projectConfig.projectBuildDir
 
   repositories {
     mavenCentral()
-    jcenter()
     google()
   }
 
   dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: "libs", include: ["*.jar"])
 
     // guava library dependencies
     implementation libraries.core.guava
 
-    // commons lang library dependencies
+    // commons library dependencies
     implementation libraries.core.commons_lang
+    implementation libraries.core.commons_text
+
+    // javapoet library dependencies
+    implementation libraries.core.javapoet
 
     // lombok library dependencies
     implementation libraries.core.lombok
     annotationProcessor libraries.core.lombok
+
+    // spotbugs library dependencies
+    implementation libraries.core.spotbugs
+    annotationProcessor libraries.core.spotbugs
 
     // lombok test library dependencies
     testImplementation libraries.core.lombok
@@ -143,6 +236,9 @@ subprojects {
     // mockito test library dependencies
     testImplementation libraries.test.mockito
     testImplementation libraries.test.mockito_junit5
+
+    // spotbugs test library dependencies
+    testImplementation libraries.core.spotbugs
 
     // junit test library dependencies
     testImplementation libraries.test.junit5_api
@@ -169,16 +265,28 @@ subprojects {
   }
 
   jar {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    //from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    //from { configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) } }
 
     manifest {
       attributes("Automatic-Module-Name": projectConfig.module)
-      attributes("Class-Path": configurations.compile.collect { it.getPath() }.join(' '))
+      attributes("Build-Date": project.buildDate)
+      attributes("Build-Time": project.buildTime)
+      attributes("Build-With": project.buildWith)
+      attributes("Build-OS": project.buildOs)
+      //attributes("Build-Revision": project.buildVersion)
+      attributes("Specification-Title": project.specTitle)
+      attributes("Specification-Version": project.specVersion)
+      attributes("Implementation-URL": projectConfig.url)
+      attributes("Implementation-Title": projectConfig.module)
+      attributes("Implementation-Version": project.version)
+      attributes("Created-By": projectConfig.vendor)
+      //attributes("Class-Path": configurations.compile.collect { it.getPath() }.join(" "))
     }
   }
 }
 
-task stage(dependsOn: ['clean'])
+task stage(dependsOn: ["clean"])
 
 task copyToLib(type: Copy) {
   from "$buildDir/libs"
@@ -196,3 +304,7 @@ task copyLicense {
     }
   }
 }
+
+//task removeGeneratedSources(type: Delete) {
+//  project.generatedSourcesDir.deleteDir()
+//}

@@ -1,0 +1,28 @@
+package java
+
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
+allprojects {
+  plugins.withType(JavaPlugin) {
+    test {
+      maxParallelForks = propertyOrDefault("tests.jvms",
+        (int) Math.max(1, Math.min(Runtime.runtime.availableProcessors() / 2.0, 4.0))) as Integer
+
+      useJUnit()
+
+      minHeapSize = propertyOrDefault("tests.minheapsize", "256m")
+      maxHeapSize = propertyOrDefault("tests.heapsize", "512m")
+
+      testLogging {
+        events TestLogEvent.FAILED
+        exceptionFormat TestExceptionFormat.FULL
+        showExceptions true
+        showCauses true
+        showStackTraces true
+        stackTraceFilters.clear()
+        showStandardStreams false
+      }
+    }
+  }
+}

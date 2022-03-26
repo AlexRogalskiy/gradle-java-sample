@@ -10,7 +10,7 @@ dependencies {
 
 flatbuffers {
   flatcPath = 'C:\\portable\\flatbuffers\\flatc'
-  flatBuffersVersion = JavaVersion.VERSION_1_8.toString()
+  flatBuffersVersion = '1.12.0'
   language = 'java'
 }
 

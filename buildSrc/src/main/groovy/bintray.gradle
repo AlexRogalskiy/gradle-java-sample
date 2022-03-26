@@ -17,6 +17,7 @@ task javadocsJar(type: Jar, dependsOn: rootProject.dokka) {
 }
 
 artifacts {
+  archives jar
   archives javadocsJar
   archives sourcesJar
 }

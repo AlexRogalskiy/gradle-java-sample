@@ -1,5 +1,5 @@
 plugins {
-  id "org.jruyi.thrift" version "0.4.1"
+  id "org.jruyi.thrift" version "0.4.2"
 }
 
 dependencies {
@@ -8,14 +8,23 @@ dependencies {
 }
 
 compileThrift {
+  thriftExecutable "thrift"
+
   includeDirs = [file('src/main/thrift')]
   outputDir = file('src/main/java')
 
+  nowarn true
+  strict true
+  verbose true
+  recurse true
+  debug true
+  allowNegKeys true
+  allow64bitsConsts true
   recurse true
   createGenFolder false
 
   generator 'java', 'private-members'
-  //generator 'html'
+  generator 'html'
 }
 
 sourceSets {
